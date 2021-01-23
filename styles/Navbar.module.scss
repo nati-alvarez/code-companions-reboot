@@ -1,0 +1,22 @@
+@import "./variables.scss";
+
+.navbar {
+    padding: 1rem;
+    background: $black;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    @include font-normal;
+}
+
+.nav-section {
+    a {
+        margin: 0px 10px;
+    }
+}
+
+.logo {
+    text-transform: uppercase;
+    @include font-bold;
+}
