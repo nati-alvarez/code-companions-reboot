@@ -9,10 +9,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "jotai": "^0.12.6",
     "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.16",
     "next": "10.0.5",
+    "pg": "^8.5.1",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "socket.io": "^3.1.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^7.29.4",
