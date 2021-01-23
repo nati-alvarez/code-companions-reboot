@@ -1,0 +1,16 @@
+$black: #1c1c1c;
+
+@mixin font-light {
+    font-family: "Dosis";
+    font-weight: 300;
+}
+
+@mixin font-normal {
+    font-family: "Dosis";
+    font-weight: 500;
+}
+
+@mixin font-bold {
+    font-family: "Dosis";
+    font-weight: 600;
+}
