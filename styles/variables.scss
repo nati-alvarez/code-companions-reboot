@@ -1,4 +1,6 @@
 $black: #1c1c1c;
+$white: whitesmoke;
+$primary-color: #bd0000;
 
 @mixin font-light {
     font-family: "Dosis";
@@ -13,4 +15,43 @@ $black: #1c1c1c;
 @mixin font-bold {
     font-family: "Dosis";
     font-weight: 600;
+}
+
+@mixin button {
+    border: none;
+    padding: .6rem 1rem;
+    font-family: "Dosis";
+    font-size: 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+@mixin primary-button {
+    @include button;
+    background: $primary-color;
+    color: $white;
+}
+
+@mixin primary-button-wide {
+    @include primary-button;
+    padding: .6rem 4rem;
+}
+
+.primary-button-wide {
+    @include primary-button-wide;
+}
+
+@mixin secondary-button {
+    @include button;
+    background: $black;
+    color: $white;
+}
+
+@mixin secondary-button-wide {
+    @include secondary-button;
+    padding: .6rem 4rem;
+}
+
+.secondary-button-wide {
+    @include secondary-button-wide;
 }
