@@ -3,7 +3,9 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["./components/*"],
-      "@styles/*": ["./styles/*"]
+      "@styles/*": ["./styles/*"],
+      "@hooks/*": ["./hooks/*"],
+      "@pages/*": ["./pages/*"]
     },
     "target": "es5",
     "lib": [
