@@ -1,0 +1,34 @@
+@import "./variables.scss";
+
+.form {
+    max-width: 600px;
+    background: darken($white, 5%);
+    border-radius: 5px;
+    border: 1px solid darken($white, 10%);
+    padding: 2rem;
+    margin: 0 auto;
+
+    h3 {
+        margin-bottom: 2rem;
+    }
+
+    fieldset {
+        margin: 1rem 0;
+
+        label {
+            display: block;
+            margin-bottom: .6rem;
+            text-transform: capitalize;
+        }
+        input, textarea {
+            font-size: 1.2rem;
+            border: 1px solid darken($white, 15%);
+            padding: .4rem;
+            min-width: 200px;
+        }
+    }
+
+    button {
+        @include secondary-button;
+    }
+}

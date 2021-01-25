@@ -1,0 +1,32 @@
+@import "./variables.scss";
+
+.main {
+    padding: 12rem 2rem;
+
+    .prompt {
+        text-align: center;
+    }
+
+    .form-container {
+        margin: 0 auto;
+        margin-top: 2rem;
+        max-width: 600px;
+    }
+
+    .form-tabs {
+        display: flex;
+
+        button {
+            border: none;
+            font-size: 1rem;
+            padding: .6rem 1rem;
+            cursor: pointer;
+            background: darken($white, 20%);
+        
+            &.active {
+                background: lighten(desaturate($primary-color, 50%), 10%);
+                color: $white;
+            }
+        }
+    }
+}
