@@ -1,5 +1,8 @@
 import {SyntheticEvent, useState} from "react";
 
+//icons
+import {ImEye, ImEyeBlocked} from "react-icons/im";
+
 //styles for the form
 import styles from "@styles/Form.module.scss";
 
@@ -26,7 +29,8 @@ export function useForm({heading, fields, buttonText, action} : PropTypes){
         parseFields[field.name] = ""
     }
     const [formState, updateFormState] = useState<Fields>(parseFields);
-    
+    const [showPassword, setShowPasswword] = useState<boolean>(false);
+
     function updateField(e): void{
         const target: HTMLInputElement = e.target;
         updateFormState({
@@ -45,9 +49,19 @@ export function useForm({heading, fields, buttonText, action} : PropTypes){
         let input;
         switch(field.inputType){
             case "email":
-            case "text":    
+            case "text":
+                input = <input onChange={updateField} type={field.inputType} name={field.name} id={field.name} value={formState[field.name]}/>
+                break;
             case "password":
-                input = <input onChange={updateField} type={field.inputType} name={field.name} id={field.name} value={formState[field.name]}></input>
+                input = (
+                    <div className={styles["password-input"]}>
+                        <input onChange={updateField} type={showPassword? "text": "password"} name={field.name} id={field.name} value={formState[field.name]}/>
+                        <div onClick={()=> setShowPasswword(!showPassword)}>
+                            {showPassword? <ImEye size={24}/>: <ImEyeBlocked size={24}/>}
+                        </div>
+                    </div>
+                )
+                break;
         }
 
         const fieldSet = (
