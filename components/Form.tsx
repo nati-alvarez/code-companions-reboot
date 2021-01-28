@@ -11,10 +11,11 @@ interface Fields{
 }   
 
 interface Field {
+    label: string,
     name: string,
     inputType: string,
     options?: Array<string>,
-    validationType?: "letters"|"email"|"numeric"|"alphanumeric"|"no-spaces"
+    validationType?: "letters"|"email"|"numeric"|"no-spaces"|"password"
 }
 
 interface PropTypes {
@@ -48,7 +49,6 @@ export default function useForm({heading, fields, buttonText, action} : PropType
         setFormError({inputId: null, message: ""});
         e.preventDefault();
         if(!validate()) return;
-        console.log("all checks")
         action(formState);
     }
 
@@ -56,22 +56,49 @@ export default function useForm({heading, fields, buttonText, action} : PropType
         for(let i = 0; i< fields.length; i++){
             const field = fields[i];
             if(formState[i] === ""){
-                setFormError({inputId: i, message: "This field cannot be empty"})
+                setFormError({inputId: i, message: "This field cannot be empty"});
                 return false;
             }
             switch(field.validationType){
-                default:
+                case "email":
+                    const emailRegex = /\S+@\S+\.\S+/;
+                    if(!emailRegex.test(formState[i])) {
+                        setFormError({inputId: i, message: "Please use a valid email"});
+                        return false;
+                    }
+                    break;
+                case "no-spaces":
+                    const format = /^[\w\d]+[\w\d_-]$/;
+                    if(!format.test(formState[i])){
+                        setFormError({inputId: i, message: "This field must begin with a letter and only contain letters, numbers, and the charaters ' - ' and ' _ '"});
+                        return false;
+                    }
+                    break;
+                case "password":
+                    const spaces = /^\S*$/
+                    if(formState[i].length < 6 || !spaces.test(formState[i])){
+                        setFormError({inputId: i, message: "Password must be longer than 5 characters and contain no spaces"});
+                        return false;
+                    }
+                    break;
+                case "numeric":
+                    const numbers = /^\d*$/;
+                    if(!numbers.test(formState[i])){
+                        setFormError({inputId: i, message: "This field may only contain numbers"});
+                        return false;
+                    }
+                    break;
+                case "letters":
+                    const letters = /^\w*$/;
+                    if(!letters.test(formState[i])){
+                        setFormError({inputId: i, message: "This field may only contain letters"});
+                        return false;
+                    }
                     break;
             }
         }
         return true;
     }
-
-    useEffect(()=>{
-        return()=>{
-            console.log("unmounting")
-        }
-    }, [])
 
     const inputs = [];
     for(let i = 0; i<fields.length; i++){
@@ -80,27 +107,41 @@ export default function useForm({heading, fields, buttonText, action} : PropType
         switch(field.inputType){
             case "email":
             case "text":
-                input = <input className={formError.inputId===i? styles["input-error"]: ""} onChange={updateField} type={field.inputType} name={field.name} id={i.toString()} value={formState[field.name]}/>
+                input = 
+                    <fieldset key={i.toString()}>
+                        <label htmlFor={i.toString()}>{field.label}</label>
+                        <input 
+                            className={formError.inputId===i? styles["input-error"]: ""} 
+                            onChange={updateField} 
+                            type={field.inputType} 
+                            name={field.name} 
+                            id={i.toString()} 
+                            value={formState[field.name]}
+                        />
+                    </fieldset>
                 break;
             case "password":
                 input = (
-                    <div className={styles["password-input"]}>
-                        <input className={formError.inputId===i? styles["input-error"]: ""} onChange={updateField} type={showPassword? "text": "password"} name={field.name} id={i.toString()} value={formState[field.name]}/>
-                        <div onClick={()=> setShowPasswword(!showPassword)}>
-                            {showPassword? <ImEye size={24}/>: <ImEyeBlocked size={24}/>}
+                    <fieldset key={i.toString()}>
+                        <label htmlFor={i.toString()}>{field.label}</label>
+                        <div className={styles["password-input"]}>
+                            <input 
+                                className={formError.inputId===i? styles["input-error"]: ""} 
+                                onChange={updateField} 
+                                type={showPassword? "text": "password"} 
+                                name={field.name} 
+                                id={i.toString()} 
+                                value={formState[field.name]}
+                            />
+                            <div onClick={()=> setShowPasswword(!showPassword)}>
+                                {showPassword? <ImEye size={24}/>: <ImEyeBlocked size={24}/>}
+                            </div>
                         </div>
-                    </div>
+                    </fieldset>
                 )
                 break;
         }
-
-        const fieldSet = (
-            <fieldset key={field.name}>
-                <label htmlFor={field.name}>{field.name}</label>
-                {input}
-            </fieldset>
-        );
-        inputs.push(fieldSet);
+        inputs.push(input);
     }
 
     return (
