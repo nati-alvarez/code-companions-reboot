@@ -4,35 +4,33 @@ import {useState} from "react";
 import styles from "@styles/LoginSignup.module.scss";
 
 //hooks
-import {useForm} from "@hooks/useForm";
+import Form from "@components/Form";
 
 //components
 import Navbar from "@components/Navbar";
 
 export default function LoginSignup(){
-    const LoginForm = useForm({
-        heading: "Login",
-        fields: [
-            {name: "email", inputType: "text"},
-            {name: "password", inputType: "password"}
-        ],
-        buttonText: "Login",
-        action: (fieldState)=>{
+    const LoginForm = <Form 
+        heading="Login"
+        fields={[
+            {label: "email", name: "email", inputType: "text", validationType: "email"},
+            {label: "password", name: "password", inputType: "password", validationType: "password"}
+        ]} 
+        buttonText="Login" 
+        action={(fieldState)=>console.log(fieldState)}
+    />
+    const SignupForm = <Form
+        heading="Signup"
+        fields={[
+            {label: "email", name: "email", inputType: "text", validationType: "email"},
+            {label: "username", name: "username", inputType: "text", validationType: "no-spaces"},
+            {label: "password", name: "password", inputType: "password", validationType: "password"}
+        ]}
+        buttonText="Signup"
+        action={(fieldState)=>{
             console.log(fieldState)
-        }
-    });
-    const SignupForm = useForm({
-        heading: "Signup",
-        fields: [
-            {name: "email", inputType: "text"},
-            {name: "username", inputType: "text"},
-            {name: "password", inputType: "password"}
-        ],
-        buttonText: "Signup",
-        action: (fieldState)=>{
-            console.log(fieldState)
-        }
-    })
+        }}
+    />
     const [form, setForm] = useState<string>("signup")
     
     return (
@@ -49,7 +47,8 @@ export default function LoginSignup(){
                             Signup
                         </button>
                     </div>
-                    {form === "signup"? SignupForm: LoginForm}
+                    {form == "login" && LoginForm}
+                    {form == "signup" && SignupForm}
                 </div>
             </main>
         </div>
