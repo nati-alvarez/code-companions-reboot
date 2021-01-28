@@ -41,4 +41,16 @@
             cursor: pointer;
         }
     }
+
+    .input-error {
+        border: 2px solid $primary-color;
+    }
+
+    .form-error {
+        background: $primary-color;
+        color: $white;
+        font-weight: bold;
+        padding: .4rem 1rem;
+        margin-top: 1rem;
+    }
 }
