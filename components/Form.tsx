@@ -49,7 +49,12 @@ export default function useForm({heading, fields, buttonText, action} : PropType
         setFormError({inputId: null, message: ""});
         e.preventDefault();
         if(!validate()) return;
-        action(formState);
+        const postData = {};
+        for(let key in fields){
+            console.log(fields[key])
+            postData[fields[key].label] = formState[key];
+        }
+        action(postData);
     }
 
     function validate(){
