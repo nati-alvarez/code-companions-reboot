@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "identity-obj-proxy": "^3.0.0",
     "jotai": "^0.12.6",
     "jsonwebtoken": "^8.5.1",
