@@ -1,4 +1,4 @@
-import {useForm} from "../hooks/useForm";
+import Form from "@components/Form";
 
 import {render, cleanup, fireEvent} from "@testing-library/react";
 
@@ -8,21 +8,15 @@ afterEach(cleanup);
 const formAction = jest.fn();
 
 let TestComponent = ()=>{
-    const form = useForm({
-       heading: "Login",
-       fields: [
-           {
-               name: "email",
-               inputType: "text"
-           },
-           {
-               name: "password",
-               inputType: "password"
-           }
-       ],
-       buttonText: "Login",
-       action: formAction
-    });
+    const form = <Form 
+        heading="Login"
+        fields={[
+            {label: "email", name: "email", inputType: "text", validationType: "letters"},
+            {label: "password", name: "password", inputType: "password"}
+        ]} 
+        buttonText="Login" 
+        action={formAction}
+    />
    return(form);
  }
 
@@ -49,8 +43,13 @@ it("Should update state values on input change event", ()=>{
 });
 
 it("Should run the submit function on submit", ()=>{
-    const {getByTestId} = render(<TestComponent/>);
+    const {getByTestId, getByLabelText} = render(<TestComponent/>);
     const form = getByTestId("form");
+
+    const emailInput = getByLabelText("email"); 
+    fireEvent.change(emailInput, {target: {value: "someemail@gmail.com"}});
+    const passwordInput = getByLabelText("password");
+    fireEvent.change(passwordInput, {target: {value: "password"}});
 
     fireEvent.submit(form);
     expect(formAction).toHaveBeenCalledTimes(1);
