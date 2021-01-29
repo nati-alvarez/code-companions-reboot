@@ -1,3 +1,5 @@
+require("dotenv").config({path: ".env.local"});
+
 module.exports = {
   development: {
     client: 'pg',
@@ -11,7 +13,7 @@ module.exports = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      directory: 'models/migrations/'
     }
   },
 
