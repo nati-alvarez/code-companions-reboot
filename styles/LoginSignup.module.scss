@@ -12,6 +12,15 @@
         margin-top: 2rem;
         max-width: 600px;
     }
+    
+    .form-success {
+        padding: .4rem 1rem;
+        margin-bottom: 2rem;
+        background: lighten(mediumseagreen, 35%);
+        border: 1px solid mediumseagreen;
+        font-weight: bold;
+        color: darken(mediumseagreen, 25%);
+    }
 
     .form-tabs {
         display: flex;
@@ -26,6 +35,30 @@
             &.active {
                 background: lighten(desaturate($primary-color, 50%), 10%);
                 color: $white;
+            }
+        }
+    }
+
+    .github-auth {
+        button {
+            display: flex;
+            margin: 0 auto;
+            margin-top: 2rem;
+            box-shadow: -5px 5px 8px 2px lighten(black, 55%);
+            transition:  100ms transform ease-in;
+            transform-origin: center center;
+            
+            &:hover {
+                transform: scale(1.1);
+            }
+
+            &:active {
+                transform: scale(1.05);
+            }
+
+            svg {
+                font-size: 1.4rem;
+                margin-left: 1rem;
             }
         }
     }
