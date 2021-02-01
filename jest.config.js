@@ -10,6 +10,7 @@ module.exports = {
         "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules",
         "^@hooks/(.*)": "<rootDir>/hooks/$1",
         "^@components/(.*)": "<rootDir>/components/$1",
-        "^@pages/(.*)": "<rootDir>/pages/$1"
+        "^@pages/(.*)": "<rootDir>/pages/$1",
+        "^@models/(.*)": "<rootDir>/models/$1"
     }
 };
