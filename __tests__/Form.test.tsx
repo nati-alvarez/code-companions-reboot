@@ -4,7 +4,6 @@ import {render, cleanup, fireEvent} from "@testing-library/react";
 
 afterEach(cleanup);
 
-// In order to test hooks, we must render a component that uses the hook. Hooks cannot be called outside of function components: https://kentcdodds.com/blog/how-to-test-custom-react-hooks/
 const formAction = jest.fn();
 
 let TestComponent = ()=>{
