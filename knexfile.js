@@ -1,4 +1,5 @@
 require("dotenv").config({path: ".env.local"});
+const path = require("path");
 
 module.exports = {
   development: {
@@ -13,10 +14,23 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: 'models/migrations/'
+      directory: path.join(__dirname, "models/migrations/")
+    },
+    seeds: {
+      directory: path.join(__dirname, "models/migrations")
     }
   },
-
+  testing: {
+    client: "sqlite3",
+    connection: ":memory:",
+    useNullAsDefault: true,
+    migrations: {
+      directory: path.join(__dirname, "models/migrations/")
+    },
+    seeds: {
+      directory: path.join(__dirname, "models/migrations")
+    }
+  },
   production: {
     client: 'pg',
     connection: {
