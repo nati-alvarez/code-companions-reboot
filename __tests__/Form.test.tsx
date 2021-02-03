@@ -1,22 +1,30 @@
+import {ChangeEvent} from "react";
 import Form from "@components/Form";
-
-import {render, cleanup, fireEvent} from "@testing-library/react";
+import {useForm} from "@hooks/useForm";
+import {render, cleanup, fireEvent, waitFor} from "@testing-library/react";
 
 afterEach(cleanup);
 
+// In order to test hooks, we must render a component that uses the hook. Hooks cannot be called outside of function components: https://kentcdodds.com/blog/how-to-test-custom-react-hooks/
 const formAction = jest.fn();
 
 let TestComponent = ()=>{
-    const form = <Form 
+    const [loginFormState, onLoginChange, loginFormError, onLoginSubmit] = useForm({
+        fields: [ 
+            {label: "email", name: "email", inputType: "text", validationType: "email"},
+            {label: "password", name: "password", inputType: "password", validationType: "password"}
+        ], 
+        formAction: formAction
+    });
+    const LoginForm = <Form 
         heading="Login"
-        fields={[
-            {label: "email", name: "email", inputType: "text", validationType: "letters"},
-            {label: "password", name: "password", inputType: "password"}
-        ]} 
+        formState={loginFormState}
+        formError={loginFormError}
         buttonText="Login" 
-        action={formAction}
+        action={onLoginSubmit as Function}
+        onChange={onLoginChange as (event: ChangeEvent<HTMLInputElement>)=> void}
     />
-   return(form);
+   return(LoginForm);
  }
 
 it("Should correctly render form", ()=>{
@@ -43,13 +51,14 @@ it("Should update state values on input change event", ()=>{
 
 it("Should run the submit function on submit", ()=>{
     const {getByTestId, getByLabelText} = render(<TestComponent/>);
-    const form = getByTestId("form");
 
     const emailInput = getByLabelText("email"); 
     fireEvent.change(emailInput, {target: {value: "someemail@gmail.com"}});
+   
     const passwordInput = getByLabelText("password");
     fireEvent.change(passwordInput, {target: {value: "password"}});
-
-    fireEvent.submit(form);
+    
+    const formButton = getByTestId("form-button");
+    fireEvent.click(formButton);
     expect(formAction).toHaveBeenCalledTimes(1);
 });
