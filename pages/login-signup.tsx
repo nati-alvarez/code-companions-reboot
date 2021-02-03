@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {ChangeEvent, useState} from "react";
 import axios from "axios";
 
 //styles
@@ -11,11 +11,13 @@ import Form from "@components/Form";
 import Navbar from "@components/Navbar";
 import GithubAuthButton from "@components/login-signup/GithubAuthButton";
 import { NextPageContext } from "next";
+import { useForm } from "@hooks/useForm";
 
 
 export async function getServerSideProps(context: NextPageContext) {
     const githubAccessCode: string[] | string = context.query.code
     const props: {githubAccessToken? : string, formStartingWith? : string | string[]} = {}
+    //this will ensure the user is returned to the form they started on after clicking the signup with github button
     if(context.query.state) props.formStartingWith = context.query.state;
 
     if(githubAccessCode){
@@ -32,7 +34,7 @@ export async function getServerSideProps(context: NextPageContext) {
             const githubAccessToken = res.data.access_token ? res.data.access_token: null;
             props.githubAccessToken = githubAccessToken;
         }catch(err){
-            console.log(err)
+            console.log(err);
         }
     }
     return {
@@ -40,38 +42,57 @@ export async function getServerSideProps(context: NextPageContext) {
     }
 }
 
+interface PropTypes {
+    githubAccessToken? : string
+    formStartingWith? : "login" | "signup"
+}
 
-export default function LoginSignup({githubAccessToken, formStartingWith}){
+export default function LoginSignup({githubAccessToken, formStartingWith}: PropTypes){
     const [form, setForm] = useState<string>(formStartingWith? formStartingWith: "signup")
     //putting this prop in state so it can be cleared
     //we want to clear it in the event the user swaps forms.
     const [githubAccessTokenState, setGithubAccessTokenState] = useState<string>(githubAccessToken);
-
     const loginAction = async (data) => {
         const res = await axios.post("/api/login", data);
         console.log(res);
     }
 
-    const LoginForm = <Form 
-        heading="Login"
-        fields={[
+    const signupAction = async (data) =>{
+        data.githubAccessToken = githubAccessTokenState;
+        const res = await axios.post("/api/signup", data);
+        console.log(res);
+    }
+    const [loginFormState, onLoginChange, loginFormError, onLoginSubmit] = useForm({
+        fields: [ 
             {label: "email", name: "email", inputType: "text", validationType: "email"},
             {label: "password", name: "password", inputType: "password", validationType: "password"}
-        ]} 
-        buttonText="Login" 
-        action={loginAction}
-    />
-    const SignupForm = <Form
-        heading="Signup"
-        fields={[
+        ], 
+        formAction: loginAction
+    });
+    const [signupFormState, onSignupChange, signupformError, onSignupSubmit] = useForm({
+        fields: [
             {label: "email", name: "email", inputType: "text", validationType: "email"},
             {label: "username", name: "username", inputType: "text", validationType: "no-spaces"},
             {label: "password", name: "password", inputType: "password", validationType: "password"}
-        ]}
+        ], 
+        formAction: signupAction
+    });
+
+    const LoginForm = <Form 
+        heading="Login"
+        formState={loginFormState}
+        formError={loginFormError}
+        buttonText="Login" 
+        action={onLoginSubmit as Function}
+        onChange={onLoginChange as (event: ChangeEvent<HTMLInputElement>)=> void}
+    />
+    const SignupForm = <Form
+        heading="Signup"
+        formState={signupFormState}
+        formError={signupformError}
         buttonText="Signup"
-        action={(fieldState)=>{
-            console.log(fieldState)
-        }}
+        action={onSignupSubmit as Function}
+        onChange={onSignupChange as (event: ChangeEvent<HTMLInputElement>)=> void}
     />
     
     function swapForm(form: string): void{
