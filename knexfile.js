@@ -14,21 +14,23 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: path.join(__dirname, "models/migrations/")
+      directory: path.join(__dirname, "models/migrations")
     },
     seeds: {
-      directory: path.join(__dirname, "models/migrations")
+      directory: path.join(__dirname, "models/seeds")
     }
   },
-  testing: {
+  test: {
     client: "sqlite3",
-    connection: ":memory:",
+    connection: {
+      filename: path.join(__dirname, "models/testdb.sqlite")
+    },
     useNullAsDefault: true,
     migrations: {
-      directory: path.join(__dirname, "models/migrations/")
+      directory: path.join(__dirname, "models/migrations")
     },
     seeds: {
-      directory: path.join(__dirname, "models/migrations")
+      directory: path.join(__dirname, "models/seeds")
     }
   },
   production: {
