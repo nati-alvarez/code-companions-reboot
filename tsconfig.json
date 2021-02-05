@@ -6,6 +6,7 @@
       "@styles/*": ["./styles/*"],
       "@hooks/*": ["./hooks/*"],
       "@pages/*": ["./pages/*"],
+      "@atoms/*": ["./atoms/*"],
       "@models/*": ["./models/*"]
     },
     "target": "es5",

@@ -11,6 +11,7 @@ module.exports = {
         "^@hooks/(.*)": "<rootDir>/hooks/$1",
         "^@components/(.*)": "<rootDir>/components/$1",
         "^@pages/(.*)": "<rootDir>/pages/$1",
+        "^@atoms/(.*)": "<rootDir>/atoms/$1",
         "^@models/(.*)": "<rootDir>/models/$1"
     }
 };
