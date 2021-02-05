@@ -23,6 +23,7 @@ export function useForm({fields, formAction}){
         }
     }
     const [formState, setFormState] = useState<Fields>(parseFields);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formError, setFormError] = useState({
         inputId: null,
         message: null
@@ -37,17 +38,20 @@ export function useForm({fields, formAction}){
     }
 
     function onSubmit(e: SyntheticEvent){
+        setIsLoading(true);
         setFormError({inputId: null, message: null})
         e.preventDefault();
         for(const prop in formState){
             const state = formState[prop];
             if (state.value.trim() === "") {
                 setFormError({inputId: state.label, message: "This field is required"});
+                setIsLoading(false);
                 return;
             }
             const [isValid, field, message] = validate(state);
             if(!isValid) {
                 setFormError({inputId: field.label, message: message});
+                setIsLoading(false);
                 return;
             }
         }
@@ -63,5 +67,5 @@ export function useForm({fields, formAction}){
         return values;
     }
 
-    return [formState, onChange, formError, onSubmit];
+    return [formState, onChange, isLoading, setIsLoading, formError, onSubmit] as const;
 }
