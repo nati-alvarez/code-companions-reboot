@@ -9,7 +9,7 @@ exports.up = function(knex) {
         table.string("profilePicture"); //use react-icon as default
         table.string("title");
         table.text("about");
-        table.string("githubAccessToken");
+        table.integer("githubId");
         table.integer("adminLevel").defaultTo(0);
     });
 };
