@@ -6,6 +6,9 @@ import {ImEye, ImEyeBlocked} from "react-icons/im";
 //styles for the form
 import styles from "@styles/Form.module.scss";
 
+//components
+import LoadingAnimation from "@components/LoadingAnimation";
+
 interface Fields{
     [key: string]: string
 }   
@@ -21,13 +24,14 @@ interface Field {
 interface PropTypes {
     heading: string,
     formState: Object,
+    isLoading: boolean,
     formError: any,
     onChange: (event: ChangeEvent<HTMLInputElement>) => void,
     buttonText: string,
     action: Function,
 }
 
-export default function useForm({heading, formState, formError, onChange, buttonText, action} : PropTypes){
+export default function useForm({heading, formState, isLoading, formError, onChange, buttonText, action} : PropTypes){
     const [showPassword, setShowPasswword] = useState<boolean>(false);
 
     const inputs = [];
@@ -78,7 +82,11 @@ export default function useForm({heading, formState, formError, onChange, button
         <form data-testid="form" className={styles.form}>
             <h3>{heading}</h3>
             {inputs.map(input=>input)}
-            <button onClick={action as any} data-testid="form-button">{buttonText}</button>
+            {isLoading?
+                    <LoadingAnimation/>
+                :
+                    <button onClick={action as any} data-testid="form-button">{buttonText}</button>
+            }
             {formError.message &&
                 <div className={styles["form-error"]}>
                     <p>{formError.message}</p>
