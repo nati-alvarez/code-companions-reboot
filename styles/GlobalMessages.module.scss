@@ -1,0 +1,73 @@
+@import "./variables.scss";
+
+@mixin container($border-color, $background-color){
+    position: absolute;
+    top: 5rem;
+    right: -200px;
+    background: $background-color;
+    padding: .4rem;
+    width: 300px;
+    border: 2px solid  $border-color;
+    border-radius: 3px;
+    animation: slide-in 500ms ease-out forwards;
+
+    button {
+        background: transparent;
+        color: $border-color;
+        font-weight: bold;
+        border: none;
+        font-size: 1.2rem;
+        @include font-bold;
+        float: right;
+        cursor: pointer;
+    }
+    
+    .loading-bar {
+        width: 100%;
+        height: 5px;
+        background: $border-color;
+        animation: slide-left 10000ms linear forwards;
+    }
+}
+
+.error-container {
+    @include container($primary-color, lighten($primary-color, 60%));
+}
+
+.success-container {
+    @include container($success-color, lighten($success-color, 50%));
+}
+
+.error-message {
+    color: $primary-color;
+    font-weight: bold;
+}
+
+.success-message {
+    color: $success-color;
+    font-weight: bold;
+}
+
+@keyframes slide-left {
+    0% {
+        width: 100%;
+    }
+
+    100% {
+        width: 0px;
+    }
+}
+
+@keyframes slide-in {
+    0% {
+        right: -300px;
+        transform: rotateX(100deg);
+    }
+    50% {
+        transform: scale(1.5) rotateX(-100deg);
+    }
+    100% {
+        right: 1rem;
+        transform: rotate(0deg)
+    }
+}
