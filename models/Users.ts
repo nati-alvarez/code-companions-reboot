@@ -54,11 +54,10 @@ export default abstract class UsersModel {
     }
 
     static async getUserLogin(email="", password="", githubId=""){
-        const user : UserObject = await db("Users").where({
-            githubId
-        }).orWhere({
-            email,
-        }).first();
+        const queryBy = githubId? {githubId} : {email};
+        const user : UserObject = await db("Users")
+        .where(queryBy)
+        .first();
         if(!user) throw new Error("Incorrect usernme or password");
         if(password && !bcrypt.compareSync(password, user.password)) throw new Error("Incorrect username or password");
         return {
