@@ -5,6 +5,7 @@ import {Provider} from "jotai";
 //components
 import GlobalError from "@components/GlobalError";
 import GlobalSuccess from "@components/GlobalSuccess";
+import JWTWrapper from "@components/JWTWrapper";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <GlobalSuccess/>
       <GlobalError/>
-      <Component {...pageProps} />
+      <JWTWrapper>
+        <Component {...pageProps} />
+      </JWTWrapper>
     </Provider>
   )
 }
