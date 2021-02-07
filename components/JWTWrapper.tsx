@@ -20,22 +20,27 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
     
     useEffect(()=>{
         if(JWTAuthToken){
+            //redirects on initial login
+            if(router.pathname === "/login-signup") router.replace("/home");
             const {exp, iat} = jwt.decode(JWTAuthToken);
+            //sets interval to refresh token once token exprires
             refreshTokenInterval.current = setInterval(()=>{
-                if(!JWTAuthToken){
-                    getNewAuthToken().then(res=>{
-                        console.log("auth token refreshed after expiry")
-                        if(router.pathname === "/login-signup") router.replace("/home");
-                    }).catch(err=>{
-                        if(restrictedRoutes.includes(router.pathname)) router.replace("/login-signup");
-                        setJWTAuthToken("")
-                    });
-                }
-              }, (exp - iat) * 1000);
+                getNewAuthToken().then(res=>{
+                    console.log("auth token refreshed after expiry")
+                    if(router.pathname === "/login-signup") router.replace("/home");
+                }).catch(err=>{
+                    //cookie expired, redirects home
+                    if(restrictedRoutes.includes(router.pathname)) router.replace("/login-signup");
+                    setJWTAuthToken("")
+                });
+            }, (exp - iat) * 1000);
         }else {
+            //on refresh, attempts to refresh token with cookie
             getNewAuthToken().then(res=>{
                 console.log("auth token refreshed after reload");
+                if(router.pathname === "/login-signup") router.replace("/home");
                 }).catch(err=>{
+                    //cookie expired, redirects home
                     console.log(err.response.data.message);
                     console.log("token, expired. redirecting...");
                     router.replace("/login-signup");
@@ -44,9 +49,10 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
         return ()=> clearInterval(refreshTokenInterval.current);
     }, [JWTAuthToken]);
 
+    const component = restrictedRoutes.includes(router.pathname) && !JWTAuthToken? <p>Loading</p>: children;
     return(
-        <>
-            {children}
-        </>
+        <p>
+            {component}
+        </p>
     )
 }
