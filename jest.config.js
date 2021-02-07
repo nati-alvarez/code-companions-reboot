@@ -12,6 +12,7 @@ module.exports = {
         "^@components/(.*)": "<rootDir>/components/$1",
         "^@pages/(.*)": "<rootDir>/pages/$1",
         "^@atoms/(.*)": "<rootDir>/atoms/$1",
+        "^@helpers/(.*)": "<rootDir>/helpers/$1",
         "^@models/(.*)": "<rootDir>/models/$1"
     }
 };
