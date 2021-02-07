@@ -104,16 +104,20 @@ export default function LoginSignup({githubAccessToken, formStartingWith, jwtAut
 
     //login function when users enters in via form rather than github button
     const loginAction = async (data) => {
+        setGlobalError("");
         try{
             const res = await axios.post("/api/login", data);
+            setJWTAuthToken(res.data.authToken)
         }catch(err){
-            console.log(err);
+           setGlobalError(err.response.data.message);
         }finally {
             setLoginIsLoading(false);
         }
     }
 
     const signupAction = async (data) =>{
+        setGlobalError("");
+        setGlobalSuccess("");
         try{
             //gets githubId if user connected github acc before signup
             //will be passed to api/signup endpoint
