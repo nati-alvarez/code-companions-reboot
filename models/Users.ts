@@ -11,7 +11,7 @@ export interface UserObject {
     profilePicture: string | null,
     title: string | null,
     about: string | null,
-    githubAccessToken: string | null,
+    githubId: string | null,
     adminLevel: 0 | 1 | 2
 }
 
@@ -19,11 +19,10 @@ interface SignupData {
     email: string,
     username: string,
     password: string,
-    githubAccessToken?: string | null
+    githubId?: number | null
 }
 
 export default abstract class UsersModel {
-
     /**
      * Creates a new user and returns user info to be stored in jwt
      * @param signupData object containing all info required to signup
@@ -32,7 +31,7 @@ export default abstract class UsersModel {
     static async createUser(signupData: SignupData) {
         let missingFields = []
         for(let field in signupData){
-            if(field === "githubAccessToken") continue;
+            if(field === "githubId") continue;
             if(!signupData[field].trim()) missingFields.push(field);
         }
         if(missingFields[0]) throw new Error("The following fields are missing: " + missingFields.join(", "));
@@ -46,14 +45,31 @@ export default abstract class UsersModel {
             email: signupData.email,
             username: signupData.username,
             password: bcrypt.hashSync(signupData.password, Number(process.env.HASH_ROUNDS)),
-            githubAccessToken: signupData.githubAccessToken
+            githubId: signupData.githubId
         });
         return await db("Users")
         .where({email: signupData.email})
-        .select("id", "username", "email", "githubAccessToken", "adminLevel")
+        .select("id", "username", "email", "githubId", "adminLevel")
         .first();
     }
 
+    static async getUserLogin(email="", password="", githubId=""){
+        const user : UserObject = await db("Users").where({
+            githubId
+        }).orWhere({
+            email,
+        }).first();
+        if(!user) throw new Error("Incorrect usernme or password");
+        if(password && !bcrypt.compareSync(password, user.password)) throw new Error("Incorrect username or password");
+        return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            adminLevel: user.adminLevel,
+            githubId: user.githubId
+        }
+    }
+    
     /**
     * Checks if username or email is in use
     * @param username - username in question
@@ -67,7 +83,7 @@ export default abstract class UsersModel {
             email
         }).first();
         if(!user) return false;
-        if(user.username === username) return "Username";
         if(user.email === email) return "Email"; 
+        if(user.username === username) return "Username";
     }
 }
