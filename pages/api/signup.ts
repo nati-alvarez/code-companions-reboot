@@ -7,9 +7,8 @@ export default async function(req: NextApiRequest, res: NextApiResponse){
         case "POST":
             try{
                 const newUser : UserObject = await UsersModel.createUser(req.body);
-                res.status(201).json({message: "Your account was created successfully"})
+                res.status(201).json({message: "Account made. Login to continue"})
             }catch(err){
-                console.log(err)
                 res.status(400).json({message: err.message})
             }
             break;
