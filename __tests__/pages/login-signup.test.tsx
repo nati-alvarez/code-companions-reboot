@@ -1,12 +1,19 @@
 import {render, cleanup, fireEvent} from "@testing-library/react";
+import {Provider} from "jotai"
 
 import LoginSignup from "../../pages/login-signup";
 
 afterEach(cleanup)
 
+const component = (
+    <Provider>
+        <LoginSignup/>
+    </Provider>
+)
+
 it("Should render login/signup page", ()=> {
     //initial render will have login page first
-    const {getByText, getAllByText, getByLabelText} = render(<LoginSignup/>);
+    const {getByText, getAllByText, getByLabelText} = render(component);
     expect(getByText("Welcome! Please login or sign up to get started")).toBeTruthy();
 
     const loginText = getAllByText("Login");
@@ -17,7 +24,7 @@ it("Should render login/signup page", ()=> {
 });
 
 it("Should change form on form tab click", async ()=>{
-    const {getAllByText, getByLabelText, getByTestId} = render(<LoginSignup/>);
+    const {getAllByText, getByLabelText, getByTestId} = render(component);
     const loginTab = getByTestId("login-tab");
     const signupTab = getByTestId("signup-tab");
 

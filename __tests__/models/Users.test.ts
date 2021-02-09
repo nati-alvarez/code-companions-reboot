@@ -8,33 +8,33 @@ beforeAll(async ()=>{
 });
 afterEach(cleanup);
 
-it("Should create a new user without githubAccessToken", async ()=>{
+it("Should create a new user without githubId", async ()=>{
     const newUser = await Users.createUser({
         email: "bob@gmail.com",
         username: "username",
         password: "password",
-        githubAccessToken: null
+        githubId: null
     });
 
     expect(typeof newUser == "object" && !Array.isArray(newUser)).toBe(true);
     expect(newUser.email).toBe("bob@gmail.com");
     expect(newUser.username).toBe("username");
-    expect(newUser.githubAccessToken).toBe(null);
+    expect(newUser.githubId).toBe(null);
     expect(newUser.id).toBeDefined();
     expect(newUser.adminLevel).toBe(0);
 });
 
-it("Should create a new user with a githubAccessToken", async ()=>{
+it("Should create a new user with a githubId", async ()=>{
     const newUser = await Users.createUser({
         email: "someone@gmail.com",
         username: "user",
         password: "pass",
-        githubAccessToken: "testing"
+        githubId: 1234
     });
     expect(typeof newUser == "object" && !Array.isArray(newUser)).toBe(true);
     expect(newUser.email).toBe("someone@gmail.com");
     expect(newUser.username).toBe("user");
-    expect(newUser.githubAccessToken).toBe("testing");
+    expect(newUser.githubId).toBe(1234);
     expect(newUser.id).toBeDefined();
     expect(newUser.adminLevel).toBe(0);
 });
@@ -44,7 +44,7 @@ it("Should not create a new user if any requried information not given", async()
         email: "",
         username: "",
         password: "",
-        githubAccessToken: null
+        githubId: null
     })).rejects.toThrow();
 
     try {
@@ -52,7 +52,7 @@ it("Should not create a new user if any requried information not given", async()
             email: "",
             username: "",
             password: "",
-            githubAccessToken: null
+            githubId: null
         });
     }catch(err){
         expect(err.message).toBe("The following fields are missing: email, username, password");
@@ -65,7 +65,7 @@ it("Should not create a new user if username or email is taken", async ()=>{
             email: "bob@gmail.com",
             username: "username",
             password: "password",
-            githubAccessToken: null
+            githubId: null
         })
     ).rejects.toThrow();
 
@@ -74,7 +74,7 @@ it("Should not create a new user if username or email is taken", async ()=>{
             email: "bob@gmail.com",
             username: "somethingelse",
             password: "password",
-            githubAccessToken: null
+            githubId: null
         });
     }catch(err){
         expect(err.message).toBe("Email in use");
@@ -85,7 +85,7 @@ it("Should not create a new user if username or email is taken", async ()=>{
             email: "someother@emailaddress.com",
             username: "username",
             password: "password",
-            githubAccessToken: null
+            githubId: null
         });
     }catch(err){
         expect(err.message).toBe("Username in use");
