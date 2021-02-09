@@ -51,8 +51,8 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
 
     const component = restrictedRoutes.includes(router.pathname) && !JWTAuthToken? <p>Loading</p>: children;
     return(
-        <p>
+        <>
             {component}
-        </p>
+        </>
     )
 }
