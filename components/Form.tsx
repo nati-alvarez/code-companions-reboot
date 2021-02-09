@@ -79,13 +79,13 @@ export default function useForm({heading, formState, isLoading, formError, onCha
     }
 
     return (
-        <form data-testid="form" className={styles.form}>
+        <form onSubmit={action as any} data-testid="form" className={styles.form}>
             <h3>{heading}</h3>
             {inputs.map(input=>input)}
             {isLoading?
                     <LoadingAnimation/>
                 :
-                    <button onClick={action as any} data-testid="form-button">{buttonText}</button>
+                    <button data-testid="form-button">{buttonText}</button>
             }
             {formError.message &&
                 <div className={styles["form-error"]}>
