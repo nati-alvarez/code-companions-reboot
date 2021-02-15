@@ -14,10 +14,14 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
     const restrictedRoutes = ["/home"];
 
     async function getNewAuthToken(){
-        const res = await axios.post("/api/refresh-token", {}, {withCredentials: true});
-        setJWTAuthToken(res.data.token);
+        return axios.post("/api/refresh-token", {}, {withCredentials: true});
     }
     
+    useEffect(()=>{
+        if(router.pathname === "/login-signup" && JWTAuthToken) router.replace("/home");
+        if(restrictedRoutes.includes(router.pathname) && !JWTAuthToken) router.replace("/login-signup");
+    }, [router.pathname])
+
     useEffect(()=>{
         if(JWTAuthToken){
             //redirects on initial login
@@ -27,6 +31,7 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
             refreshTokenInterval.current = setInterval(()=>{
                 getNewAuthToken().then(res=>{
                     console.log("auth token refreshed after expiry")
+                    setJWTAuthToken(res.data.token)
                     if(router.pathname === "/login-signup") router.replace("/home");
                 }).catch(err=>{
                     //cookie expired, redirects home
@@ -37,9 +42,9 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
         }else {
             //on refresh, attempts to refresh token with cookie
             getNewAuthToken().then(res=>{
-                console.log("auth token refreshed after reload");
+                setJWTAuthToken(res.data.token);
                 if(router.pathname === "/login-signup") router.replace("/home");
-                }).catch(err=>{
+            }).catch(err=>{
                     //cookie expired, redirects home
                     console.log(err.response.data.message);
                     console.log("token, expired. redirecting...");
