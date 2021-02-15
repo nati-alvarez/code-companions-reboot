@@ -1,7 +1,7 @@
 import {ChangeEvent} from "react";
 import Form from "@components/Form";
 import {useForm} from "@hooks/useForm";
-import {render, cleanup, fireEvent, waitFor} from "@testing-library/react";
+import {render, cleanup, fireEvent} from "@testing-library/react";
 import {Provider} from "jotai";
 
 afterEach(cleanup);
