@@ -7,6 +7,9 @@ import axios from "axios";
 import {useAtom} from "jotai";
 import {JWTAuthTokenAtom} from "@atoms/auth";
 
+//components
+import LoadingPage from "@components/LoadingPage";
+
 export default function JWTWrapper({children} : {children: React.ReactChild}){
     const [JWTAuthToken, setJWTAuthToken] = useAtom(JWTAuthTokenAtom);
     const refreshTokenInterval = useRef<any>();
@@ -54,7 +57,7 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
         return ()=> clearInterval(refreshTokenInterval.current);
     }, [JWTAuthToken]);
 
-    const component = restrictedRoutes.includes(router.pathname) && !JWTAuthToken? <p>Loading</p>: children;
+    const component = restrictedRoutes.includes(router.pathname) && !JWTAuthToken? <LoadingPage/>: children;
     return(
         <>
             {component}
