@@ -1,7 +1,7 @@
 //This will be the landing page
 
 //styles
-import styles from "@styles/Home.module.scss";
+import styles from "@styles/Landing.module.scss";
 //components
 import Navbar from "@components/Navbar.tsx";
 
