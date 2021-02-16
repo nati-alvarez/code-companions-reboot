@@ -53,7 +53,7 @@ export default abstract class UsersModel {
         .first();
     }
 
-    static async getUserLogin(email="", password="", githubId=""){
+    static async getUserLogin(email : string = "", password : string = "", githubId : string = ""){
         const queryBy = githubId? {githubId} : {email};
         const user : UserObject = await db("Users")
         .where(queryBy)
