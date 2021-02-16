@@ -8,6 +8,9 @@ export default function Navbar(){
                 <Link href="/">
                     <a className={styles.logo}>Code_Companions</a>
                 </Link>
+                <Link href="/home">
+                    <a>Home</a>
+                </Link>
             </div>
             <div className={styles["nav-section"]}>
                 <Link href="/social-hub">
