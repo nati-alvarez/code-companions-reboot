@@ -24,14 +24,10 @@ export function verifyRefreshToken(refreshToken: string){
 
 export function authenticateUser(req: NextApiRequest, res: NextApiResponse){
     const token = req.headers.authorization;
-    return new Promise((resolve, reject)=>{
-        try{
-            const user = jwt.verify(token, process.env.JWT_SECRET);
-            req['user'] = user;
-            return resolve(user);
-        }catch(err){
-            console.log(err)
-            return reject(new Error("Invalid token"));
-        }
-    });
+    try{
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+        req['user'] = user; //using bracket syntax, otherwise typescript complains
+    }catch(err){
+        throw new Error("Invalid token");
+    }
 }
