@@ -1,0 +1,72 @@
+@import "./variables.scss";
+
+.heading {
+    margin-bottom: 2rem;
+}
+
+button.create-project {
+    @include primary-button;
+    font-weight: bold;
+}
+
+.projects {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.project-card {
+    max-width: 350px;
+    width: 33%;
+    margin: 0px 3%;
+    margin-bottom: 2rem;
+    border: 1px solid darken($white, 20%);
+    padding: 1rem;
+    box-shadow: -5px 5px 5px darken($white, 10%);
+    flex-direction: column;
+    display: flex;
+
+    h4 {
+        margin-bottom: 1rem;
+    }
+
+    .project-owner {
+        margin: .4rem 0;
+        display: flex;
+        align-items: center;
+
+        img {
+            border-radius: 50%;
+            background: gainsboro;
+            margin-right: 10px;
+        }
+    }
+
+    .description {
+        margin-bottom: 1rem;
+        max-height: 100px;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+            position: absolute;
+            bottom: 0;
+            content: " ";
+            display: block;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(transparent, white)
+        }
+    }
+
+    .workspace-button {
+        margin-top: 2rem;
+        @include secondary-button;
+        justify-self: flex-end;
+        margin-top: auto;
+    }
+}
