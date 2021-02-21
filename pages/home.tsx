@@ -4,6 +4,11 @@ import axios from "axios";
 //styles
 import styles from "@styles/Home.module.scss";
 
+//atoms 
+import { JWTAuthTokenAtom } from "@atoms/auth";
+import {globalErrorAtom, globalSuccessAtom} from "@atoms/globalMessages";
+import {useAtom} from "jotai";
+
 interface Project {
     projectId: number
     title: string
@@ -18,11 +23,12 @@ import Navbar from "@components/Navbar";
 import MyProjects from "@components/home/MyProjects";
 import ProjectListings from "@components/home/ProjectListings";
 import LoadingAnimation from "@components/LoadingAnimation";
-import { JWTAuthTokenAtom } from "@atoms/auth";
-import { useAtom } from "jotai";
 
 export default function Home(){
     const [JWTToken, setJWTToken] = useAtom(JWTAuthTokenAtom);
+    const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
+    const [globalErrorMessage, setGlobalErrorMessage] = useAtom(globalErrorAtom);
+
     const [tab, setTab] = useState("projects");
     const [myProjectsLoading, setMyProjectsLoading] = useState(false);
     const [myProjects, setMyProjects] = useState<Array<Project>>([]);
@@ -60,10 +66,18 @@ export default function Home(){
                     myProjectsLoading?
                         <LoadingAnimation/>
                     :
-                        <MyProjects projects={myProjects}/>
+                        <MyProjects 
+                            setGlobalErrorMessage={setGlobalErrorMessage}
+                            setGlobalSuccessMessage={setGlobalSuccessMessage}
+                            JWTToken={JWTToken}
+                            setMyProjects={setMyProjects}
+                            projects={myProjects}/>
                     
                 :
-                    <ProjectListings listings={projectListings}/>
+                    <ProjectListings 
+                        setGlobalErrorMessage={setGlobalErrorMessage} 
+                        setGlobalSuccessMessage={setGlobalSuccessMessage} 
+                        listings={projectListings}/>
                 }
             </div>
             </main>

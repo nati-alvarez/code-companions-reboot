@@ -1,4 +1,4 @@
-export default function ProjectListings({listings}){
+export default function ProjectListings({setGlobalSuccessMessage, setGlobalErrorMessage, listings}){
     return (
         <div>
             <h3>Project Listings</h3>
