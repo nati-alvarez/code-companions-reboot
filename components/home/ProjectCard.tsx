@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 //styles
 import styles from "@styles/MyProjects.module.scss";
 
@@ -20,7 +22,9 @@ export default function ProjectCard({project}: {project: Project}){
                <p>{project.ownerUsername}</p>
            </div>
            <p className={styles["description"]}>{project.description}</p>
-           <button className={styles["workspace-button"]}>Open Workspace</button>
+           <Link href={`/projects/${project.projectId}`}>
+               <button className={styles["workspace-button"]}>Open Workspace</button>
+           </Link>
         </div>
     )
 }
