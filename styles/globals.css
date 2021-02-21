@@ -92,4 +92,12 @@ h4 {
 
 button {
 	display: block;
+	border: none;
+    padding: .6rem 1rem;
+    font-family: "Dosis";
+    font-size: 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+	background: #afafaf;
+	font-weight: bold;
 }
