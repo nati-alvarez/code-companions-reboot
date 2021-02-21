@@ -7,6 +7,7 @@ import styles from "@styles/MyProjects.module.scss";
 import ProjectCard from "./ProjectCard";
 import Modal from "@components/Modal";
 import { useState } from "react";
+import axios from "axios";
 
 //types
 interface Project {
@@ -19,11 +20,31 @@ interface Project {
 }
 
 interface PropTypes {
-    projects: Array<Project>
+    projects: Array<Project>,
+    setMyProjects: Function,
+    JWTToken: string,
+    setGlobalSuccessMessage: Function,
+    setGlobalErrorMessage: Function
 }
 
-export default function MyProjects({projects} : PropTypes){
-    const createProject = (data) => console.log(data);
+export default function MyProjects({projects, setMyProjects, setGlobalErrorMessage, setGlobalSuccessMessage, JWTToken} : PropTypes){
+    const [showModal, setShowModal] = useState(false);
+    const createProject = async (data) =>{
+        try{
+            const res = await axios.post("/api/projects", data, {
+                headers: {
+                    "Authorization": JWTToken
+                }
+            });
+            setGlobalSuccessMessage(res.data.message);
+            setMyProjects([...projects, res.data.project]);
+            setShowModal(false);
+        }catch(err){
+            if(err.response){
+                setGlobalErrorMessage(err.response.data.message)
+            }else setGlobalErrorMessage(err.message);
+        }
+    };
     const [modalState, onChange, isLoading, setIsLoading, modalError, onSubmit] = useForm({
         fields: [
             {label: "title", name: "title", inputType: "text", validationType: "letters"},
@@ -32,7 +53,6 @@ export default function MyProjects({projects} : PropTypes){
         ], 
         formAction: createProject
     });
-    const [showModal, setShowModal] = useState(false);
 
     return (
         <div>
