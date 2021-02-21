@@ -10,6 +10,7 @@
     border: 2px solid  $border-color;
     border-radius: 3px;
     animation: slide-in 500ms ease-out forwards;
+    z-index: 100;
 
     button {
         background: transparent;
