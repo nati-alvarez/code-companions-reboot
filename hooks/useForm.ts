@@ -62,7 +62,8 @@ export function useForm({fields, formAction}){
         const values = {};
         for(let prop in formState){
             const field = formState[prop];
-            values[field.label] = field.value
+            console.log(field.label.replace(" ", "_"))
+            values[field.label.replace(" ", "_")] = field.value
         }
         return values;
     }
