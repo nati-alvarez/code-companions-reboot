@@ -1,0 +1,72 @@
+@import "./variables.scss";
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, .9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    form {
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        background: $white;
+
+        h3 {
+            margin-bottom: 2rem;
+        }
+
+        fieldset {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-size: 1.2rem;
+            text-transform: capitalize;
+            margin-bottom: 1rem;
+        }
+
+        input, textarea {
+            font-size: 1rem;
+            padding: .6rem;
+            border-radius: 3px;
+        }
+
+        textarea {
+            resize: vertical;
+            max-width: 100%;
+        }
+
+        .actions {
+            display: flex;
+
+            :first-child {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.modal-button {
+    font-weight: bold;
+    @include secondary-button;
+}
+
+.input-error {
+    border: 3px solid $primary-color;
+}
+
+.modal-error {
+    background: $primary-color;
+    margin-top: 1rem;
+    font-weight: bold;
+    color: $white;
+    padding: .6rem;
+}
