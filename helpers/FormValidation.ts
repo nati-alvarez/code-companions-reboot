@@ -7,7 +7,7 @@ export default function validate(field){
             }
         break;
         case "no-spaces":
-            const format = /^[\w\d]+[\w\d_-]$/;
+            const format = /^[\w\d_-]+[\w\d_-]$/;
             if(!format.test(field.value)){
                 return [false, field, 'This field may only contain letters, numbers, and the characters "_" and "-" and be 2 characters minimum'];
             }
@@ -25,7 +25,7 @@ export default function validate(field){
             }
             break;
         case "letters":
-            const letters = /^\w*$/;
+            const letters = /^[\w\s]*$/;
             if(!letters.test(field.value)){
                 return [false, field, "This field may only contain letters or spaces"]
             }
