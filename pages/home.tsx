@@ -75,8 +75,10 @@ export default function Home(){
                     
                 :
                     <ProjectListings 
+                        setProjectListings={setProjectListings}
                         setGlobalErrorMessage={setGlobalErrorMessage} 
-                        setGlobalSuccessMessage={setGlobalSuccessMessage} 
+                        setGlobalSuccessMessage={setGlobalSuccessMessage}
+                        JWTToken={JWTToken}
                         listings={projectListings}/>
                 }
             </div>
