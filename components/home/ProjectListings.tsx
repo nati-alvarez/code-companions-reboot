@@ -6,8 +6,10 @@ import styles from "@styles/ProjectListings.module.scss";
 
 //components
 import ListingCard from "./ListingCard";
+import LoadingAnimation from "@components/LoadingAnimation"
 
 export default function ProjectListings({setGlobalSuccessMessage, setGlobalErrorMessage, JWTToken, setProjectListings, listings}){
+    const [loading, setLoading] = useState(true);
     useEffect(()=>{
         axios.get(
             "/api/listings", 
@@ -18,6 +20,8 @@ export default function ProjectListings({setGlobalSuccessMessage, setGlobalError
             setProjectListings(res.data.listings);
         }).catch(err=>{
             console.log(err);
+        }).finally(()=>{
+            setLoading(false);
         })
     }, []);
     
@@ -25,11 +29,16 @@ export default function ProjectListings({setGlobalSuccessMessage, setGlobalError
     return (
         <div>
             <h3>Projects for you:</h3>
-            <div className={styles["listings-container"]}>
-                {listings.map(listing=>{
-                    return <ListingCard  key={listing.id} listing={listing}/>
-                })}
-            </div>
+            {loading?
+                <LoadingAnimation/>
+            :
+                <div className={styles["listings-container"]}>
+                    {listings.map(listing=>{
+                        return <ListingCard  key={listing.id} listing={listing}/>
+                    })}
+                </div>
+            }
+            
         </div>
     )
 }
