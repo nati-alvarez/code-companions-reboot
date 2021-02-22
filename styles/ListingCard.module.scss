@@ -1,0 +1,59 @@
+@import "./variables.scss";
+
+.project-listing {
+    border: 1px solid gainsboro;
+    max-width: 800px;
+    padding: 1rem 1rem 2rem 1rem;
+    background: darken($white, 1%);
+    margin-bottom: 2rem;
+    
+    &:hover {
+        transition: transform ease 300ms;
+        transform: scale(1.025) rotate(1deg);
+        cursor: pointer;
+        
+        &:nth-of-type(even){
+            transform: scale(1.025) rotate(-1deg);
+        }
+        h4 {
+            color: $primary-color;
+        }
+    }
+
+    .listing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        time {
+            color: lighten($black, 40%);
+        }
+    }
+
+    .project-owner {
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+
+        img {
+            margin-right: 10px;
+            background: gainsboro;
+            border-radius: 50%;
+        }
+    }
+
+    p.listing-description {
+        margin-top: 1.4rem;
+    }
+
+    .required-skills {
+        margin-top: 1rem;
+    }
+
+    .skill-tag {
+        padding: .4rem;
+        margin-right: 10px;
+        border: 1px solid gainsboro;
+        background: darken($white, 20%)
+    }
+}
