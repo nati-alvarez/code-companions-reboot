@@ -13,10 +13,20 @@ export default abstract class ListingsModel {
             .select(["l.id", "l.listingTitle", "l.description", "l.created_at", "u.id as ownerId", "u.username as ownerUsername", "u.profilePicture as ownerProfilePicture"])
             .where({"l.public": true})
             .modify(function(queryBuilder) {
-                if (filters.query) {
+                if (filters.query && filters.query != null) {
                     queryBuilder.whereRaw('LOWER("listingTitle") LIKE ?', `%${filters.query.toLowerCase()}%`);
                 }
-            }); 
+                switch(filters.option){
+                    case "newest":
+                        queryBuilder.orderBy("created_at", "desc");
+                        break;
+                    case "oldest":
+                        queryBuilder.orderBy("created_at", "asc");
+                    default:
+                        queryBuilder.orderBy("created_at", "desc");
+                        break;
+                }
+            });
         
         for (let listing of listings){
             try {
