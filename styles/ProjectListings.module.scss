@@ -1,3 +1,36 @@
+@import "./variables.scss";
+
 .listings-container {
     margin-top: 2rem;
+}
+
+.listings-filters {
+    display: flex;
+    margin-top: 2rem;
+    align-items: center;
+
+    fieldset {
+        display: flex;
+        margin-right: 20px;
+        align-items: center;
+
+        label {
+            font-size: 1.4rem;
+            margin-right: 10px;
+        }
+    }
+    input, select {
+        @include font-normal;
+        font-size: 1rem;
+        padding: .2rem;
+    }
+
+    select {
+        margin-right: 20px;
+    }
+
+    .filter-button {
+        @include secondary-button;
+        padding: .4rem 1rem;
+    }
 }
