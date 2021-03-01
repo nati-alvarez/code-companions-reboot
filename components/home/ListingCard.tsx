@@ -1,11 +1,10 @@
 //styles
-import listings from "@pages/api/listings";
 import styles from "@styles/ListingCard.module.scss";
 
 export default function ListingCard({listing}){
     const listingDate = new Date(listing.created_at);
     return (
-        <div className={styles["project-listing"]}>
+        <div key={listing.id} className={styles["project-listing"]}>
             <div className={styles["listing-header"]}>
                 <h4>{listing.listingTitle}</h4>
                 <time>{listingDate.toLocaleDateString()}</time>
@@ -20,7 +19,7 @@ export default function ListingCard({listing}){
             {listing.skills[0] && <div className={styles["required-skills"]}>
                 {listing.skills.map(skill=>{
                     return (
-                        <span className={styles["skill-tag"]}>{skill.skillName}</span>
+                        <span key={skill.id} className={styles["skill-tag"]}>{skill.skillName}</span>
                     )
                 })}
             </div> }
