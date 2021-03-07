@@ -49,7 +49,7 @@ export default function MyProjects({projects, setMyProjects, setGlobalErrorMessa
         fields: [
             {label: "title", name: "title", inputType: "text", validationType: "letters"},
             {label: "description", name: "description", inputType: "textarea", validationType: null},
-            {label: "github repo", name: "repo", inputType: "text", validationType: "no-spaces"}
+            {label: "github repo", name: "repo", inputType: "text", validationType: null}
         ], 
         formAction: createProject
     });
