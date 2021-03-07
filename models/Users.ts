@@ -53,6 +53,14 @@ export default abstract class UsersModel {
         .first();
     }
 
+    /**
+     * Checks if a user login is valid and returns a payload to be passed to a JWT if it is valid,
+     * if not throws an error
+     * @param email - The users email
+     * @param password - The users password
+     * @param githubId - (optional) The users github id from github login flow, can be used instead of email and password
+     * @returns User payload for JWT
+     */
     static async getUserLogin(email : string = "", password : string = "", githubId : string = ""){
         const queryBy = githubId? {githubId} : {email};
         const user : UserObject = await db("Users")
@@ -66,6 +74,24 @@ export default abstract class UsersModel {
             email: user.email,
             adminLevel: user.adminLevel,
             githubId: user.githubId
+        }
+    }
+
+    /**
+     * Gets a users info to view on their own private profile page
+     * @param id - The id of the user
+     * @returns Returns the user object with their private info
+     */
+    static getMyProfile(id: number){
+        try {
+            return db("Users")
+            .where({
+                id
+            })
+            .select(["id", "email", "username", "name", "profilePicture", "joinedOn", "title", "about"])
+            .first();
+        }catch(err){
+            throw new Error("User not found");
         }
     }
     
