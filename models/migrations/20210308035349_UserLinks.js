@@ -1,12 +1,12 @@
 exports.up = function(knex) {
-    return knex.schema.createTable("UserSkills", table=>{
+    return knex.schema.createTable("UserLinks", table=>{
         table.increments();
         table.integer("userId").notNullable().unsigned().references("id").inTable("Users").onUpdate("CASCADE").onDelete("CASCADE");
-        table.string("skillName").notNullable();
-        table.unique(["userId", "skillName"]);
+        table.string("url").notNullable();
+        table.unique(["userId", "url"]);
     });
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("UserSkills");
+  return knex.schema.dropTableIfExists("UserLinks");
 };
