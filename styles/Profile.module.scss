@@ -1,0 +1,87 @@
+@import "./variables.scss";
+
+.profile-page {
+    padding: 1rem;
+
+    .logout-button {
+        position: absolute;
+        right: 1rem;
+        @include primary-button;
+    }
+
+    .pfp {
+        margin: 0 auto;
+        margin-top: 4rem;
+        display: block;
+        border-radius: 50%;
+        width: 250px;
+        height: 250px;
+    }
+    
+    .handles {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 1.8rem;
+    
+        .username {
+            @include font-bold;
+            color: $primary-color;
+            padding-right: .6rem;
+        }
+    }
+
+    .title {
+        margin-top: .6rem;
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .about {
+        margin-top: 4rem;
+        text-align: center;
+        
+        h4 {
+            text-align: center;
+        }
+
+        p {
+            display: inline-block;
+            text-align: center;
+            max-width: 600px;
+            margin-top: 1.2rem;
+        }
+    }
+
+    .skills {
+        margin: 0 auto;
+        margin-top: 4rem;
+        text-align: center;
+        max-width: 600px;
+
+        h4 {
+            margin-bottom: 1.6rem;
+        }
+
+        .skill-tag {
+            @include font-bold;
+            font-size: 1.2rem;
+            display: inline-block;
+            background: $primary-color;
+            color: $white;
+            padding: .4rem .8rem;
+            margin: 0px 10px;
+        }
+    }
+
+    .links {
+        margin-top: 4rem;
+        text-align: center;
+
+        a {
+            margin: 1.6rem 0;
+            display: block;
+            font-size: 1.4rem;
+            color: $primary-color;
+        }
+    }
+}
