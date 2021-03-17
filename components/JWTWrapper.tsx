@@ -49,6 +49,7 @@ export default function JWTWrapper({children} : {children: React.ReactChild}){
     useEffect(()=>{
         if(JWTAuthToken){
             //redirects on initial login
+            console.log(router.pathname)
             if(router.pathname === "/login-signup") router.replace("/home");
             const {exp, iat} = jwt.decode(JWTAuthToken);
             //sets interval to refresh token once token exprires
