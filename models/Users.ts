@@ -82,14 +82,28 @@ export default abstract class UsersModel {
      * @param id - The id of the user
      * @returns Returns the user object with their private info
      */
-    static getMyProfile(id: number){
+    static async getMyProfile(id: number){
         try {
-            return db("Users")
+            const user = await db("Users")
             .where({
                 id
             })
             .select(["id", "email", "username", "name", "profilePicture", "joinedOn", "title", "about"])
             .first();
+            
+            const userSkills = await db("UserSkills")
+            .where({
+                userId: user.id
+            }).pluck("skillName");
+
+            const userLinks = await db("UserLinks")
+            .where({
+                userId: user.id
+            }).pluck("url"); //pluck returns column as is, not wrapping it in an object. pretty neat!
+
+            user.skills = userSkills;
+            user.links = userLinks;
+            return user;
         }catch(err){
             throw new Error("User not found");
         }
