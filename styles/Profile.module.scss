@@ -57,9 +57,28 @@
         margin-top: 4rem;
         text-align: center;
         max-width: 600px;
+        position: relative;
+
+        &:hover {
+            .add-skill-button {
+                display: block;
+            }
+        }
 
         h4 {
             margin-bottom: 1.6rem;
+        }
+
+        .add-skill-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: $primary-color;
+            display: inline-block;
+            color: $white;
+            font-size: 1.4rem;
+            padding: .4rem;
+            display: none;
         }
 
         .skill-tag {

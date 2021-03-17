@@ -13,6 +13,9 @@ import styles from "@styles/Profile.module.scss";
 import LoadingAnimation from "@components/LoadingAnimation";
 import Navbar from "@components/Navbar";
 
+//icons
+import {FaPen} from "react-icons/fa";
+
 //types
 interface UserData {
     id: number,
@@ -22,7 +25,9 @@ interface UserData {
     profilePicture: string,
     joinedOn: string,
     title: string,
-    about: string
+    about: string,
+    skills: Array<string>
+    links: Array<string>
 }
 
 export default function Profile(){
@@ -41,6 +46,8 @@ export default function Profile(){
             console.log(err.response.data.message)
         })
     }, []);
+
+    console.log(user)
 
     const skills = ['JavaScript', "HTML", "CSS", "React"];
     const links = ["http://github.com/nati-alvarez", "http://natividadalvarez.vercel.app", "http://linkedin.com/in/natividad-alvarez"];
@@ -63,7 +70,10 @@ export default function Profile(){
                         </section>
                         <section className={styles["skills"]}>
                             <h4>{user.name}'s Skills</h4>
-                            {skills.map(skill=>{
+                            <div className={styles["add-skill-button"]}>
+                                <FaPen/>
+                            </div>
+                            {user.skills.map(skill=>{
                                 return (
                                     <div className={styles["skill-tag"]}>
                                         {skill}
@@ -74,7 +84,7 @@ export default function Profile(){
                         <section className={styles["links"]}> 
                             <h4>Social Links</h4>
                             <div>
-                                {links.map(link=>{
+                                {user.links.map(link=>{
                                     return (
                                         <a href={link}>{link}</a>
                                     )
