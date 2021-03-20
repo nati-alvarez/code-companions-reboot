@@ -6,9 +6,7 @@ import styles from "@styles/ProjectListings.module.scss";
 
 //components
 import ListingCard from "./ListingCard";
-import LoadingAnimation from "@components/LoadingAnimation"
-import { useRouter } from "next/router";
-import { getPageFiles } from "next/dist/next-server/server/get-page-files";
+import LoadingAnimation from "@components/LoadingAnimation";
 
 export default function ProjectListings({setGlobalSuccessMessage, setGlobalErrorMessage, JWTToken, setProjectListings, listings}){
     const [loading, setLoading] = useState(true);
@@ -62,8 +60,7 @@ export default function ProjectListings({setGlobalSuccessMessage, setGlobalError
     }
     
     const updatePageNumber = (page: number) => {
-        //keeps page within the right bounds
-        if(page > totalPages || page < 1) return;
+        if(page > totalPages || page < 1) return; //keeps page within the right bounds
         setPageNumber(page);
     }
 
