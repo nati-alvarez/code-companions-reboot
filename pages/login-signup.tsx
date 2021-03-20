@@ -25,12 +25,18 @@ import { useForm } from "@hooks/useForm";
 //models
 import UsersModel from "@models/Users";
 
+interface PropTypes {
+    githubAccessToken? : string
+    formStartingWith? : "login" | "signup",
+    jwtAuthToken? : string,
+    errorMessage?: string
+}
 
 export async function getServerSideProps(context: NextPageContext) {
     const githubAccessCode: string[] | string = context.query.code
-    const props: {githubAccessToken? : string, formStartingWith? : string | string[], jwtAuthToken?: string} = {}
+    const props: PropTypes = {}
     //this will ensure the user is returned to the form they started on after clicking the signup with github button
-    if(context.query.state) props.formStartingWith = context.query.state;
+    if(context.query.state) props.formStartingWith = context.query.state as any;
 
     //get the access token once the user comes back from OAuth login
     if(githubAccessCode){
@@ -47,6 +53,7 @@ export async function getServerSideProps(context: NextPageContext) {
             const githubAccessToken = res.data.access_token ? res.data.access_token: null;
             props.githubAccessToken = githubAccessToken;
         }catch(err){
+            props.errorMessage = "Server error, please try again later"
             console.log(err);
         }
     }
@@ -83,13 +90,7 @@ export async function getServerSideProps(context: NextPageContext) {
     }
 }
 
-interface PropTypes {
-    githubAccessToken? : string
-    formStartingWith? : "login" | "signup",
-    jwtAuthToken? : string
-}
-
-export default function LoginSignup({githubAccessToken, formStartingWith, jwtAuthToken}: PropTypes){
+export default function LoginSignup({githubAccessToken, formStartingWith, jwtAuthToken, errorMessage}: PropTypes){
     const router = useRouter();
     const [globalError, setGlobalError] = useAtom(globalErrorAtom);
     const [globalSuccess, setGlobalSuccess] = useAtom(globalSuccessAtom);
@@ -182,6 +183,13 @@ export default function LoginSignup({githubAccessToken, formStartingWith, jwtAut
             setJWTAuthToken(jwtAuthToken);
         }
     }, [jwtAuthToken])
+
+    useEffect(()=>{
+        if(errorMessage){
+            //shows error if there was a problem connecting to github account for signup
+            setGlobalError(errorMessage)
+        }
+    }, []);
 
     return (
         <div>
