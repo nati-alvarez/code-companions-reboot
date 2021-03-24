@@ -6,7 +6,7 @@ exports.up = function(knex) {
         table.string("username").notNullable().unique();
         table.string("password").notNullable();
         table.timestamp("joinedOn").defaultTo(knex.fn.now());
-        table.string("profilePicture"); //use react-icon as default
+        table.string("profilePicture").defaultTo("/default-pfp.png"); //use /public/deafult-pfp.png as default
         table.string("title");
         table.text("about");
         table.integer("githubId");
