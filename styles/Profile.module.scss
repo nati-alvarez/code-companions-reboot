@@ -9,6 +9,38 @@
         @include primary-button;
     }
 
+    section {
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top: 6vh;
+        margin-bottom: 6vh;
+        padding: 2rem;
+        position: relative;
+
+        h4 {
+            margin-bottom: .6rem;
+        }
+    }
+
+    .edit-button {
+        cursor: pointer;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: $primary-color;
+        color: $white;
+        font-size: 1.4rem;
+        padding: .4rem;
+        opacity: 1;
+        border-radius: 50%;
+        padding: 10px;
+        transition: transform 150ms ease-out;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
     .pfp {
         margin: 0 auto;
         margin-top: 4rem;
@@ -37,49 +69,18 @@
     }
 
     .about {
-        margin-top: 4rem;
+        margin-top: 2rem;
         text-align: center;
-        
-        h4 {
-            text-align: center;
-        }
 
         p {
             display: inline-block;
             text-align: center;
-            max-width: 600px;
-            margin-top: 1.2rem;
         }
     }
 
     .skills {
-        margin: 0 auto;
-        margin-top: 4rem;
         text-align: center;
-        max-width: 600px;
         position: relative;
-
-        &:hover {
-            .add-skill-button {
-                display: block;
-            }
-        }
-
-        h4 {
-            margin-bottom: 1.6rem;
-        }
-
-        .add-skill-button {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: $primary-color;
-            display: inline-block;
-            color: $white;
-            font-size: 1.4rem;
-            padding: .4rem;
-            display: none;
-        }
 
         .skill-tag {
             @include font-bold;
@@ -93,7 +94,6 @@
     }
 
     .links {
-        margin-top: 4rem;
         text-align: center;
 
         a {

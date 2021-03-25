@@ -84,7 +84,7 @@ export default function CreateProjectModal({heading, modalState, modalError, mod
                 <h3>{heading}</h3>
                 {inputs}
                 <div className={styles['actions']}>
-                    <button className={styles['modal-button']}>Create Project</button>
+                    <button className={styles['modal-button']}>Submit</button>
                     <button onClick={()=> setShowModal(false)}>Close</button>
                 </div>
                 {modalError.message && 
