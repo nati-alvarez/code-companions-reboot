@@ -2,12 +2,16 @@
 import styles from "@styles/Modal.module.scss";
 import { ChangeEvent, FormEvent, useState } from "react";
 
+//components
+import LoadingAnimation from "@components/LoadingAnimation";
+
 //types
 interface PropTypes {
     heading: string,
     modalAction: FormEvent,
     modalState: any,
     modalError: any,
+    setModalError: any,
     onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
     isLoading: boolean,
     setIsLoading: Function,
@@ -17,7 +21,7 @@ interface PropTypes {
 //icons
 import {ImEye, ImEyeBlocked} from "react-icons/im";
 
-export default function CreateProjectModal({heading, modalState, modalError, modalAction, onChange, setShowModal, isLoading, setIsLoading} : PropTypes){
+export default function CreateProjectModal({heading, modalState, modalError, setModalError, modalAction, onChange, setShowModal, isLoading, setIsLoading} : PropTypes){
     const [showPassword, setShowPassword] = useState(false);
 
     const inputs = [];
@@ -78,15 +82,28 @@ export default function CreateProjectModal({heading, modalState, modalError, mod
         inputs.push(input);
     }
 
+    function closeModal(){
+        setModalError({
+            inputId: null,
+            message: null
+        })
+        setShowModal(false);
+    }
+
     return (
        <div className={styles["modal-background"]}>
             <form onSubmit={modalAction as any}>
                 <h3>{heading}</h3>
                 {inputs}
-                <div className={styles['actions']}>
-                    <button className={styles['modal-button']}>Submit</button>
-                    <button onClick={()=> setShowModal(false)}>Close</button>
-                </div>
+                {!isLoading && 
+                    <div className={styles['actions']}>
+                        <button className={styles['modal-button']}>Submit</button>
+                        <button onClick={closeModal}>Close</button>
+                    </div> 
+                }
+                {isLoading && 
+                    <LoadingAnimation/>
+                }
                 {modalError.message && 
                     <p className={styles["modal-error"]}>{modalError.message}</p>
                 }
