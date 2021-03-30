@@ -84,5 +84,5 @@ export function useForm({fields, formAction}){
         return values;
     }
 
-    return [formState, onChange, isLoading, setIsLoading, formError, onSubmit] as const;
+    return [formState, onChange, isLoading, setIsLoading, formError, setFormError, onSubmit] as const;
 }
