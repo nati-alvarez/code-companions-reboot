@@ -29,7 +29,15 @@ interface PropTypes {
 
 export default function MyProjects({projects, setMyProjects, setGlobalErrorMessage, setGlobalSuccessMessage, JWTToken} : PropTypes){
     const [showModal, setShowModal] = useState(false);
-    const createProject = async (data) =>{
+    const [modalState, onChange, isLoading, setIsLoading, modalError, setModalError, onSubmit] = useForm({
+        fields: [
+            {label: "title", name: "title", inputType: "text", validationType: "letters"},
+            {label: "description", name: "description", inputType: "textarea", validationType: null},
+            {label: "github repo", name: "repo", inputType: "text", validationType: null}
+        ], 
+        formAction: createProject
+    });
+    async function createProject(data){
         try{
             const res = await axios.post("/api/projects", data, {
                 headers: {
@@ -41,19 +49,16 @@ export default function MyProjects({projects, setMyProjects, setGlobalErrorMessa
             setShowModal(false);
         }catch(err){
             if(err.response){
-                setGlobalErrorMessage(err.response.data.message)
-            }else setGlobalErrorMessage(err.message);
+                setModalError({
+                    inputId: null,
+                    message: err.response.data.message
+                });
+            }else setModalError(err.message);
+        }finally {
+            setIsLoading(false);
         }
     };
-    const [modalState, onChange, isLoading, setIsLoading, modalError, onSubmit] = useForm({
-        fields: [
-            {label: "title", name: "title", inputType: "text", validationType: "letters"},
-            {label: "description", name: "description", inputType: "textarea", validationType: null},
-            {label: "github repo", name: "repo", inputType: "text", validationType: null}
-        ], 
-        formAction: createProject
-    });
-
+    
     return (
         <div>
             <h3 className={styles["heading"]}>My Projects</h3>
@@ -71,6 +76,7 @@ export default function MyProjects({projects, setMyProjects, setGlobalErrorMessa
             {showModal && <Modal 
                 modalState={modalState} 
                 modalError={modalError} 
+                setModalError={setModalError}
                 modalAction={onSubmit as any} 
                 onChange={onChange}
                 isLoading={isLoading}
