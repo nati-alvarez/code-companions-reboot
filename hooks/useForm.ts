@@ -79,7 +79,7 @@ export function useForm({fields, formAction}){
         const values = {};
         for(let prop in formState){
             const field = formState[prop];
-            values[field.label.replace(" ", "_")] = field.value
+            values[field.label.replace(" ", "_").toLowerCase()] = field.value
         }
         return values;
     }
