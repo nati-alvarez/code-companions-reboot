@@ -74,14 +74,20 @@ export function useForm({fields, formAction}){
         formAction(extractValuesFromFormState());
     }
 
-    //nomalizes field names sent to backend into snake case
+    //nomalizes field names sent to backend into camel case
     function extractValuesFromFormState(){
         const values = {};
         for(let prop in formState){
             const field = formState[prop];
-            values[field.label.replace(" ", "_").toLowerCase()] = field.value
+            values[toCamelCase(field.label)] = field.value
         }
         return values;
+    }
+
+    function toCamelCase(str) {
+        return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+          return index === 0 ? word.toLowerCase() : word.toUpperCase();
+        }).replace(/\s+/g, '');
     }
 
     return [formState, onChange, isLoading, setIsLoading, formError, setFormError, onSubmit] as const;
