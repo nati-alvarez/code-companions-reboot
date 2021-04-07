@@ -5,7 +5,8 @@ import cookie from "cookie";
 //atoms
 import {useAtom} from "jotai";
 import {JWTAuthTokenAtom} from "@atoms/auth";
-import React, { useEffect, useState } from "react";
+import {globalSuccessAtom} from "@atoms/globalMessages"
+import React, { useState } from "react";
 
 //hooks
 import {useForm} from "@hooks/useForm";
@@ -19,7 +20,7 @@ import Navbar from "@components/Navbar";
 import Modal from "@components/Modal";
 
 //icons
-import {FaPen, FaUser} from "react-icons/fa";
+import {FaPen} from "react-icons/fa";
 
 //types
 interface UserData {
@@ -56,36 +57,59 @@ export async function getServerSideProps(context){
 export default function Profile(props){
     const [JWTToken, setJWTToken] = useAtom(JWTAuthTokenAtom);
     const [user, setUser] = useState<UserData>(props.userData);
-    const tokenInfo = jwt.decode(JWTToken);
+    const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
 
-    const [infoModalState, onInfoChange, infoIsLoading, setinfoIsLoading, infoModalError, onInfoSubmit] = useForm({
+    const [infoModalState, onInfoChange, infoIsLoading, setInfoIsLoading, infoModalError, setInfoModalError, onInfoSubmit] = useForm({
         fields: [
             {label: "Profile Picture", name: "pfp", inputType: "text", validationType: null, value: user.profilePicture},
-            {label: "Username", name: "username", inputType: "text", validationType: null, value: user.username},
-            {label: "Name", name: "name", inputType: "text", validationType: null, value: user.name},
+            {label: "Username", name: "username", inputType: "text", validationType: "no-spaces", value: user.username},
+            {label: "Name", name: "name", inputType: "text", validationType: "letters", value: user.name},
             {label: "Title", name: "title", inputType: "text", validationType: null, value: user.title},
-            {label: "About", name: "about", inputType: "text", validationType: null, value: user.about}
+            {label: "About", name: "about", inputType: "textarea", validationType: null, value: user.about}
         ], 
         formAction: updateUserInfo
     });
     const [showInfoModal, setShowInfoModal] = useState<boolean>(false);
 
-    function updateUserInfo(){
-        console.log("running function")
-        console.log(infoModalError, infoModalState);
+    async function updateUserInfo(data){
+        setInfoIsLoading(true);
+        try{
+            await axios.put(`/api/users/${user.id}`, data, {
+                headers: {
+                    "Authorization": JWTToken
+                }
+            });
+            setUser({
+                ...user,
+                ...data
+            });
+            setGlobalSuccessMessage("You profile was updated");
+            setShowInfoModal(false);
+        }catch(err){
+            if(err.response.data) console.log(err.response.data.message);
+            setInfoModalError({
+                inputId: null,
+                message: err.response.data.message
+            });
+        }finally{
+            setInfoIsLoading(false);
+        }
     }
 
-    const skills = ['JavaScript', "HTML", "CSS", "React"];
-    const links = ["http://github.com/nati-alvarez", "http://natividadalvarez.vercel.app", "http://linkedin.com/in/natividad-alvarez"];
     return (
         <div>
             <Navbar/>
             {showInfoModal && 
                 <Modal 
-                setShowModal={()=>setShowInfoModal(!showInfoModal)} 
-                heading="Edit Your Account Info" 
-                modalError={infoModalError}
-                modalState={infoModalState}
+                    setShowModal={()=>setShowInfoModal(!showInfoModal)} 
+                    heading="Edit Your Account Info" 
+                    modalError={infoModalError}
+                    setModalError={setInfoModalError}
+                    modalState={infoModalState}
+                    modalAction={onInfoSubmit as any}
+                    onChange={onInfoChange}
+                    isLoading={infoIsLoading}
+                    setIsLoading={setInfoIsLoading}
                 />
             }
             <main className={styles["profile-page"]}>
@@ -108,7 +132,7 @@ export default function Profile(props){
                             </div>
                         </section>
                         <section className={styles["skills"]}>
-                            <h4>{user.username}'s Skills</h4>
+                            <h4>{user.name? user.name : user.username}'s Skills</h4>
                             <div className={styles["edit-button"]}>
                                 <FaPen/>
                             </div>
