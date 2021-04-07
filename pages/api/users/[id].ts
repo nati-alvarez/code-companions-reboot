@@ -7,10 +7,16 @@ import UsersModel from "@models/Users"
 import {authenticateUser} from "@helpers/jwt";
 
 export default async function(req: NextApiRequest, res: NextApiResponse){
+        try {
+            authenticateUser(req, res);
+        }catch(err){
+            console.log(err)
+            res.status(401).json({message: err.message});
+        }
+
         switch(req.method){
             case "GET":
                 try {
-                    authenticateUser(req, res);
                     const {id} = req.query;
                     const userId: number = parseInt(id as string);
                     if(userId === req["user"].id){
@@ -20,8 +26,22 @@ export default async function(req: NextApiRequest, res: NextApiResponse){
                         
                     }
                 }catch(err){
-                    console.log(err)
-                    res.status(401).json({message: err.message});
+                    console.log(err);
+                    res.status(500).json({message: err.message});
+                }
+                break;
+            case "PUT":
+                try {
+                    const {id} = req.query;
+                    // When calling .update() on knex models, if a field is unique and you try chainging it to 
+                    // a value that already exists in the db you get a unique constraint error EVEN IF the field of the record being edited holds
+                    // that unique value. This line will prevent that error
+                    if(req["user"].username === req.body.username) delete req.body.username;
+                    await UsersModel.updateUserInfo(id, req.body);
+                    res.status(200).json({message: "We hit the user info edit endpoint"});
+                }catch(err){
+                    console.log(err);
+                    res.status(500).json({message: err.message});
                 }
                 break;
             default:
