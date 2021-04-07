@@ -1,7 +1,7 @@
 @import "./variables.scss";
 
 @mixin container($border-color, $background-color){
-    position: absolute;
+    position: fixed;
     top: 5rem;
     right: -200px;
     background: $background-color;
@@ -10,7 +10,7 @@
     border: 2px solid  $border-color;
     border-radius: 3px;
     animation: slide-in 500ms ease-out forwards;
-    z-index: 100;
+    z-index: 200;
 
     button {
         background: transparent;
