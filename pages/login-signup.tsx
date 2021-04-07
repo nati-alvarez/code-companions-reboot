@@ -46,7 +46,7 @@ export async function getServerSideProps(context: NextPageContext) {
                 {
                     client_id: process.env.GITHUB_CLIENT_ID,
                     client_secret: process.env.GITHUB_CLIENT_SECRET,
-                    code: githubAccessCode,
+                    code: githubAccessCode,       
                 },
                 {headers: {"Accept": "application/json"}}
             )
@@ -135,14 +135,14 @@ export default function LoginSignup({githubAccessToken, formStartingWith, jwtAut
             setSignupIsLoading(false);
         }
     }
-    const [loginFormState, onLoginChange, loginIsLoading, setLoginIsLoading, loginFormError, onLoginSubmit] = useForm({
+    const [loginFormState, onLoginChange, loginIsLoading, setLoginIsLoading, loginFormError, setLoginFormError, onLoginSubmit] = useForm({
         fields: [ 
             {label: "email", name: "email", inputType: "text", validationType: "email"},
             {label: "password", name: "password", inputType: "password", validationType: "password"}
         ], 
         formAction: loginAction
     });
-    const [signupFormState, onSignupChange, signupIsLoading, setSignupIsLoading, signupformError, onSignupSubmit] = useForm({
+    const [signupFormState, onSignupChange, signupIsLoading, setSignupIsLoading, signupformError, setSignupFormError, onSignupSubmit] = useForm({
         fields: [
             {label: "email", name: "email", inputType: "text", validationType: "email"},
             {label: "username", name: "username", inputType: "text", validationType: "no-spaces"},
