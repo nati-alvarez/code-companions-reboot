@@ -28,6 +28,10 @@ export default abstract class UsersModel {
      * @param signupData object containing all info required to signup
      * @returns User info jwt payload or error object
      */
+
+    // We will use this to validate that data received from a request body will only attempt to apply updates to valid user fields
+    private static validUserProps = {"email":1, "name":1, "username": 1, "password":1, "joinedOn": 1, "profilePicture": 1, "title":1, "about":1, "githubId":1, "adminLevel": 1}
+
     static async createUser(signupData: SignupData) {
         let missingFields = []
         for(let field in signupData){
@@ -99,7 +103,7 @@ export default abstract class UsersModel {
             const userLinks = await db("UserLinks")
             .where({
                 userId: user.id
-            }).pluck("url"); //pluck returns column as is, not wrapping it in an object. pretty neat!
+            }).pluck("url"); //pluck method returns column as is, not wrapping it in an object. pretty neat!
 
             user.skills = userSkills;
             user.links = userLinks;
@@ -115,14 +119,54 @@ export default abstract class UsersModel {
     * @param email - email in question
     * @return Returns the keywords "Email" or "Username" indictating which is in use or false is neither is
     */
-    static async doesUserExist(username : string = "", email : string = ""){
-        const user : UserObject = await db("Users").where({
-            username
-        }).orWhere({
-            email
+    static async doesUserExist(username : string = "", email : string = "", userId: string | null = null){
+        const user : UserObject = await db("Users")
+        .where(function(){
+            this.where("username", username);
+            if(userId) this.andWhere("id", "!=", userId);
+        }).orWhere(function(){
+            this.where("email", email);
+            if(userId) this.andWhere("id", "!=", userId);
         }).first();
+        
         if(!user) return false;
         if(user.email === email) return "Email"; 
         if(user.username === username) return "Username";
+    }
+
+    /**
+     * Updates user profile info, user skills, and profile links.
+     * All fields are optional and only the fields passed (if valid) are updated
+     * @param userId ID of the user being updated
+     * @param changes Object of fields to be changed with their new values
+     */
+    static async updateUserInfo(userId, changes){
+        let isUsernameOrEmailTaken;
+        if(changes.email || changes.username){
+            isUsernameOrEmailTaken = await this.doesUserExist(changes.username, changes.email, userId);
+        }
+        if(isUsernameOrEmailTaken) throw new Error(`${isUsernameOrEmailTaken} is taken`);
+        
+        this.validateReqBodyFields(changes);
+        if(Object.keys(changes).length > 0){
+            await db("Users").update({
+                ...changes
+            }).where({
+                id: userId
+            });
+        }
+
+
+    }
+
+    /**
+     * Ensures the fields in the request body are valid fields on the Users model. Mutates the object by removing invalid fields.
+     * @param fields Object of fields in request body to be checked against list of valid user fields
+     * @returns void
+     */
+    private static validateReqBodyFields(fields){
+        for(let field in fields){
+            if(!this.validUserProps[field]) delete fields[field];
+        }
     }
 }
