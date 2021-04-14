@@ -6,9 +6,10 @@
 ### ENV Vars
 use .env.local file
 
-DB_HOST  
+DB_HOST
+DB_NAME
 DB_USER  
-DB_PASSWORD  
+DB_PASSWORD
 
 JWT_SECRET  
 
