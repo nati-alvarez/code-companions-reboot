@@ -18,6 +18,7 @@ import styles from "@styles/Profile.module.scss";
 import LoadingAnimation from "@components/LoadingAnimation";
 import Navbar from "@components/Navbar";
 import Modal from "@components/Modal";
+import Skills from "@components/profile/Skills";
 
 //icons
 import {FaPen} from "react-icons/fa";
@@ -131,20 +132,7 @@ export default function Profile(props){
                                 <p>{user.about}</p>
                             </div>
                         </section>
-                        <section className={styles["skills"]}>
-                            <h4>{user.name? user.name : user.username}'s Skills</h4>
-                            <div className={styles["edit-button"]}>
-                                <FaPen/>
-                            </div>
-                            {user.skills[0] && user.skills.map(skill=>{
-                                return (
-                                    <div className={styles["skill-tag"]}>
-                                        {skill}
-                                    </div>
-                                )
-                            })}
-                            {!user.skills[0] && <p>You haven't added any skills.</p>}
-                        </section>
+                        <Skills user={user} setUser={setUser} JWTToken={JWTToken}/>
                         <section className={styles["links"]}> 
                             <div className={styles["edit-button"]}>
                                 <FaPen/>
