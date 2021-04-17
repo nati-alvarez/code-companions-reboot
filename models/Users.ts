@@ -29,9 +29,6 @@ export default abstract class UsersModel {
      * @returns User info jwt payload or error object
      */
 
-    // We will use this to validate that data received from a request body will only attempt to apply updates to valid user fields
-    private static validUserProps = {"email":1, "name":1, "username": 1, "password":1, "joinedOn": 1, "profilePicture": 1, "title":1, "about":1, "githubId":1, "adminLevel": 1}
-
     static async createUser(signupData: SignupData) {
         let missingFields = []
         for(let field in signupData){
@@ -148,6 +145,17 @@ export default abstract class UsersModel {
         if(isUsernameOrEmailTaken) throw new Error(`${isUsernameOrEmailTaken} is taken`);
         
         this.validateReqBodyFields(changes);
+        if(changes.skills){
+            //the skills property gets uploaded as an array of all skills a user wants to have on their account, no information
+            //about which skills should be removed, added, or left alone is included.
+            //So, here we delete all a users skills first because we'll re-upload duplicates otherwise, which causes a unique constraint error
+            //NOTE: We should potentially find a better way to do this, so all the skills don't have to be bulk deleted and uploaded each time
+            await db("UserSkills").del().where({userId})
+            await db("UserSkills").insert(changes.skills);
+            //removing the property here so it doesn't affect any other updates
+            delete changes.skills;
+        }
+
         if(Object.keys(changes).length > 0){
             await db("Users").update({
                 ...changes
@@ -157,6 +165,21 @@ export default abstract class UsersModel {
         }
 
 
+    }
+
+    // We will use this to validate that data received from a request body will only attempt to apply updates to valid user fields
+    private static validUserProps = {
+        "email":1, 
+        "name":1, 
+        "username": 1, 
+        "password":1, 
+        "joinedOn": 1, 
+        "profilePicture": 1, 
+        "title":1, 
+        "about":1, 
+        "githubId":1, 
+        "adminLevel": 1,
+        "skills":1
     }
 
     /**
