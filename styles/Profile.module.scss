@@ -41,6 +41,34 @@
         }
     }
 
+    .save-button, .discard-button {
+        cursor: pointer;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: $primary-color;
+        color: $white;
+        font-size: 1.4rem;
+        padding: .4rem;
+        opacity: 1;
+        border-radius: 50%;
+        padding: 10px;
+        transition: transform 150ms ease-out;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+
+    .save-button {
+        right: 4.8rem;
+        background: darkgreen;
+    }
+
+    .discard-button {
+        background-color: $black;
+    }
+
     .pfp {
         margin: 0 auto;
         margin-top: 4rem;
@@ -92,7 +120,53 @@
             color: $white;
             padding: .4rem .8rem;
             margin: 0px 10px;
+            margin-top: 1rem;
         }
+
+        .skill-tag-removable {
+            background: darken($white, 20%);
+            color: $black;
+            border: 1px solid transparent; 
+            &:hover {
+                text-decoration: line-through;
+                background-color: $primary-color;
+                color: $white;
+                border: 1px solid $black;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .skill-select {
+        margin-top: 1rem;
+        width: 100%;
+
+        input {
+            padding: .4rem;
+            width: 100%;
+        }
+        .suggestions {
+            border: 1px solid darken($white, 20%);
+
+            .suggestion {
+                border-bottom: 1px solid darken($white, 20%);
+                padding: .6rem 0;
+                margin: 0;
+                cursor: pointer;
+
+                &:hover {
+                    background: darken($white, 10%);
+                }
+            }
+
+            //this is the loading animation
+            div {
+                margin: 0 auto;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+        
     }
 
     .links {
