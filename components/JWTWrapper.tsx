@@ -10,6 +10,11 @@ import {JWTAuthTokenAtom} from "@atoms/auth";
 //components
 import LoadingPage from "@components/LoadingPage";
 
+/* This component wraps the main app to keep track of the short-lived auth JWT stored in memory
+ * and update it bofore it expires using a longer lived refresh token stored in a same site, http
+ * only cookie. This strategy (Refresh/Auth Token) gives a much more secure way of storing client side auth tokens
+ * than a normal cookie or local storage (See this to learn more: https://medium.com/@sugandhasaxena1212/access-token-and-refresh-token-with-node-js-a501e1cc034b)
+ */
 export default function JWTWrapper({children} : {children: React.ReactChild}){
     const [JWTAuthToken, setJWTAuthToken] = useAtom(JWTAuthTokenAtom);
     const refreshTokenInterval = useRef<any>();
