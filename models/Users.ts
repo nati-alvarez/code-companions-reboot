@@ -155,6 +155,10 @@ export default abstract class UsersModel {
             //removing the property here so it doesn't affect any other updates
             delete changes.skills;
         }
+    
+        if(changes.socialLInks){
+
+        }
 
         if(Object.keys(changes).length > 0){
             await db("Users").update({
@@ -179,7 +183,8 @@ export default abstract class UsersModel {
         "about":1, 
         "githubId":1, 
         "adminLevel": 1,
-        "skills":1
+        "skills":1,
+        "socialLinks": 1
     }
 
     /**

@@ -2,6 +2,7 @@ exports.up = function(knex) {
     return knex.schema.createTable("UserLinks", table=>{
         table.increments();
         table.integer("userId").notNullable().unsigned().references("id").inTable("Users").onUpdate("CASCADE").onDelete("CASCADE");
+        table.string("label").notNullable();
         table.string("url").notNullable();
         table.unique(["userId", "url"]);
     });
