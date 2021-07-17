@@ -60,8 +60,9 @@ export async function getServerSideProps(context: NextPageContext) {
     if(props.githubAccessToken && props.formStartingWith === "login"){
         //gets user github info with accessToken
         const user = octokat({token: props.githubAccessToken});
-        const userGithubData = await user.me.read();
-        try{
+        const userGithubData = JSON.parse(await user.me.read());
+	console.log(userGithubData);
+	try {
             //generates auth and refresh jwt if login valid
             const userPayload = await UsersModel.getUserLogin(null, null, userGithubData.id);
             const refreshToken = generateRefreshToken(userPayload);
@@ -124,7 +125,7 @@ export default function LoginSignup({githubAccessToken, formStartingWith, jwtAut
             //will be passed to api/signup endpoint
             if(githubAccessTokenState){
                 const githubAPI = octokat({token: githubAccessTokenState});
-                const userGithubData = await githubAPI.me.read();
+                const userGithubData = JSON.parse(await githubAPI.me.read());
                 data.githubId = userGithubData.id;
             }
             const res = await axios.post("/api/signup", data);
