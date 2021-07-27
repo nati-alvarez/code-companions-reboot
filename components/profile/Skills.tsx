@@ -26,6 +26,10 @@ export default function Skills({user, setUser, JWTToken}){
     
 
     function updateSkillQuery(e) {
+        // soft character limit on skill names
+        // TODO: either think about imposing this on the backend as well, or remove altogether
+        if(e.target.value.length > 35) return;
+
         setSkillQuery(e.target.value)
         clearTimeout(skillQueryTimeout.current);
         skillQueryTimeout.current = setTimeout(()=> skillQueryTimeoutFunction(e.target.value), 500);
