@@ -1,14 +1,20 @@
 import {useState, useRef} from "react";
 import axios from "axios";
 
-//styles
+// styles
 import styles from "@styles/Profile.module.scss";
 
-//icons
+// icons
 import {FaPen, FaSave, FaTrashAlt} from "react-icons/fa";
 
-//components
+// components
 import LoadingAnimation from "@components/LoadingAnimation";
+
+// types
+interface ISuggestion {
+    keyName: string,
+    id: string
+}
 
 export default function Skills({user, setUser, JWTToken}){
     const [skillQuery, setSkillQuery] = useState<string>("");
@@ -126,9 +132,9 @@ export default function Skills({user, setUser, JWTToken}){
             {showSkillSelect && <div className={styles["skill-select"]}>
                 <input onKeyUp={e=> updateUserSkills({action: "add", e})} onChange={updateSkillQuery} value={skillQuery} type="text"/>
                 <div className={styles["suggestions"]}>
-                    {skillSuggestions.map(suggestion=>{
+                    {skillSuggestions.map((suggestion: ISuggestion) =>{
                         return (
-                            <div onClick={()=> updateUserSkills({action: "add", skillName: suggestion.keyName})} className={styles["suggestion"]}>{suggestion.keyName}</div>
+                            <div key={suggestion.id} onClick={()=> updateUserSkills({action: "add", skillName: suggestion.keyName})} className={styles["suggestion"]}>{suggestion.keyName}</div>
                         );
                     })}
                     {skillSuggestionsLoading && <LoadingAnimation/>}
