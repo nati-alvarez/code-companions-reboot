@@ -57,6 +57,7 @@ export default function Skills({user, setUser, JWTToken}){
         if(skillData.e && skillData.e.keyCode === 13){
             setSkillQuery("");
             skillData.skillName = skillData.e.target.value;
+            setSkillSuggestions([]);
         }else if (skillData.e) return;
         
         if(skillData.action === "add" && !skillUpdates.includes(skillData.skillName)){
