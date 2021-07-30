@@ -105,7 +105,7 @@ export default function ProjectListings({setGlobalSuccessMessage, setGlobalError
                     <input 
                         id="per-page"
                         type="number" 
-                        max={totalListings} min="1"
+                        max="10" min="1"
                         onChange={e => setListingFilters({...listingFilters, listingsPerPage: parseInt(e.target.value)})}
                         value={listingFilters.listingsPerPage}
                     />
