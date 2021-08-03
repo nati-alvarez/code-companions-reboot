@@ -1,6 +1,10 @@
 import {useState, useRef} from "react";
 import axios from "axios";
 
+// atoms
+import { useAtom } from "jotai";
+import {globalSuccessAtom} from "@atoms/globalMessages"
+
 // styles
 import styles from "@styles/Profile.module.scss";
 
@@ -23,6 +27,8 @@ export default function Skills({user, setUser, JWTToken}){
     const [showSkillSelect, setShowSkillSelect] = useState<boolean>(false);
     const [skillUpdates, setSkillUpdates] = useState<Array<string>>(user.skills);
     const skillQueryTimeout = useRef<any>();
+
+    const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
     
 
     function updateSkillQuery(e) {
@@ -30,7 +36,7 @@ export default function Skills({user, setUser, JWTToken}){
         // TODO: either think about imposing this on the backend as well, or remove altogether
         if(e.target.value.length > 35) return;
 
-        setSkillQuery(e.target.value)
+        setSkillQuery(e.target.value);
         clearTimeout(skillQueryTimeout.current);
         skillQueryTimeout.current = setTimeout(()=> skillQueryTimeoutFunction(e.target.value), 500);
     }
@@ -79,11 +85,10 @@ export default function Skills({user, setUser, JWTToken}){
             data.skills.push({
                 skillName,
                 userId: user.id
-
             });
         });
         try{
-            await axios.put(`/api/users/${user.id}`, data, {
+            const res = await axios.put(`/api/users/${user.id}`, data, {
                 headers: {
                     "Authorization": JWTToken
                 }
@@ -94,6 +99,7 @@ export default function Skills({user, setUser, JWTToken}){
                 skills: skillUpdates
             });
             setShowSkillSelect(false);
+            setGlobalSuccessMessage(res.data.message);
         }catch(err){
             console.log(err.response.data.message);
         }
