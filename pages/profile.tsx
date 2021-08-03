@@ -19,6 +19,7 @@ import LoadingAnimation from "@components/LoadingAnimation";
 import Navbar from "@components/Navbar";
 import Modal from "@components/Modal";
 import Skills from "@components/profile/Skills";
+import Links from "@components/profile/Links";
 
 //icons
 import {FaPen} from "react-icons/fa";
@@ -133,20 +134,7 @@ export default function Profile(props){
                             </div>
                         </section>
                         <Skills user={user} setUser={setUser} JWTToken={JWTToken}/>
-                        <section className={styles["links"]}> 
-                            <div className={styles["edit-button"]}>
-                                <FaPen/>
-                            </div>
-                            <h4>Social Links</h4>
-                            <div>
-                                {user.links[0] && user.links.map(link=>{
-                                    return (
-                                        <a href={link}>{link}</a>
-                                    )
-                                })}
-                                {!user.links[0] && <p>You haven't added any profile links.</p>}
-                            </div>
-                        </section>
+                        <Links user={user} setUser={setUser} JWTToken={JWTToken}/>
                     </React.Fragment>
                 }
                 {!user &&
