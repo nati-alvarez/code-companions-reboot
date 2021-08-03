@@ -115,7 +115,7 @@ export default function Links({user, setUser, JWTToken}) {
                     {user.links[0] && user.links.map(link => {
                         return (
                             <div className={styles["user-link"]}>
-                                <span>{link.label}</span><a href={link}>{link.url}</a>
+                                <span>{link.label}</span><a href={link.url}>{link.url}</a>
                             </div>
                         )
                     })}
