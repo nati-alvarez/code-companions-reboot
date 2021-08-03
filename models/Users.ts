@@ -95,14 +95,15 @@ export default abstract class UsersModel {
             const userSkills = await db("UserSkills")
             .where({
                 userId: user.id
-            }).pluck("skillName");
+            }).pluck("skillName"); //pluck method returns column as is, not wrapping it in an object. pretty neat!
 
             const userLinks = await db("UserLinks")
             .where({
                 userId: user.id
-            }).pluck("url"); //pluck method returns column as is, not wrapping it in an object. pretty neat!
+            }).select("id", "label", "url");
 
             user.skills = userSkills;
+            console.log(userLinks)
             user.links = userLinks;
             return user;
         }catch(err){
@@ -146,18 +147,23 @@ export default abstract class UsersModel {
         
         this.validateReqBodyFields(changes);
         if(changes.skills){
-            //the skills property gets uploaded as an array of all skills a user wants to have on their account, no information
-            //about which skills should be removed, added, or left alone is included.
-            //So, here we delete all a users skills first because we'll re-upload duplicates otherwise, which causes a unique constraint error
-            //NOTE: We should potentially find a better way to do this, so all the skills don't have to be bulk deleted and uploaded each time
+            // the skills property gets uploaded as an array of all skills a user wants to have on their account, no information
+            // about which skills should be removed, added, or left alone is included.
+            // So, here we delete all a users skills first because we'll re-upload duplicates otherwise, which causes a unique constraint error
+            // NOTE: We should potentially find a better way to do this, so all the skills don't have to be bulk deleted and uploaded each time
             await db("UserSkills").del().where({userId})
             await db("UserSkills").insert(changes.skills);
-            //removing the property here so it doesn't affect any other updates
+            // removing the property here so it doesn't affect any other updates
             delete changes.skills;
         }
-    
-        if(changes.socialLInks){
+        
+        console.log(changes)
+        if(changes.links){
+            // same as skills
+            await db("UserLinks").del().where({userId})
+            await db("UserLinks").insert(changes.links);
 
+            delete changes.links;
         }
 
         if(Object.keys(changes).length > 0){
@@ -184,7 +190,7 @@ export default abstract class UsersModel {
         "githubId":1, 
         "adminLevel": 1,
         "skills":1,
-        "socialLinks": 1
+        "links": 1
     }
 
     /**
