@@ -3,7 +3,7 @@ import axios from "axios";
 
 // atoms
 import { useAtom } from "jotai";
-import {globalSuccessAtom} from "@atoms/globalMessages"
+import {globalSuccessAtom, globalErrorAtom} from "@atoms/globalMessages"
 
 //icons
 import {FaPen, FaSave, FaTrashAlt} from "react-icons/fa";
@@ -27,6 +27,7 @@ export default function Links({user, setUser, JWTToken}) {
     const newLinkId= useRef<string>("n-0");
 
     const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
+    const [globalErrorMessage, setGlobalErrorMessage] = useAtom(globalErrorAtom);
 
     
     function updateLinkLabel (e) {
@@ -63,7 +64,31 @@ export default function Links({user, setUser, JWTToken}) {
         newLinkId.current = "n-0";
     }
 
+    function validateLinks() : boolean {
+        let linksAreValid = true;
+        const validLinkFormat = /^(http|https):\/\/\w*\.\w*.\w*$/;
+        linkUpdates.map(link => {
+            const linkIsValid = validLinkFormat.test(link.url);
+            const linkHasLabel = link.label.trim() !== "";
+            if(!linkIsValid){
+                console.log(validLinkFormat.test(link.url) === false)
+                console.log(link)
+                setGlobalErrorMessage("Not all links are valid, ensure they follow this format http(s)://example.com or http(s)://subdomain.example.com");
+                linksAreValid = false;
+                return false;
+            }
+            if(!linkHasLabel) {
+                setGlobalErrorMessage("All links must have a label");
+                linksAreValid = false;
+                return false;
+            }
+            return true;
+        });
+        return linksAreValid;
+    }
+
     async function saveChanges () {
+        if(! validateLinks()) return false;
         const data = {links: []};
         linkUpdates.forEach(link => {
             data.links.push({
@@ -115,7 +140,7 @@ export default function Links({user, setUser, JWTToken}) {
                     {user.links[0] && user.links.map(link => {
                         return (
                             <div className={styles["user-link"]}>
-                                <span>{link.label}</span><a href={link.url}>{link.url}</a>
+                                <span>{link.label}</span><a target="_blank" href={link.url}>{link.url}</a>
                             </div>
                         )
                     })}
@@ -125,7 +150,7 @@ export default function Links({user, setUser, JWTToken}) {
             {showEditLinks &&
                 <div>
                     <button onClick={addNewLink} className={styles['add-new-link-button']}>Add New Link</button>
-                    {user.links[0] && linkUpdates.map(link => {
+                    {linkUpdates[0] && linkUpdates.map(link => {
                         return (
                             <div className={styles["edit-user-link"]}>
                                 <fieldset>
