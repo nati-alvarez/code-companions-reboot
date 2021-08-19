@@ -6,7 +6,8 @@
     right: -200px;
     background: $background-color;
     padding: .4rem;
-    width: 300px;
+    min-width: 275px;
+    max-width: 450px;
     border: 2px solid  $border-color;
     border-radius: 3px;
     animation: slide-in 500ms ease-out forwards;
