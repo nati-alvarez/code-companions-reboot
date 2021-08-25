@@ -45,12 +45,13 @@ export function verifyRefreshToken(refreshToken: string) : Error | string {
  * @param {NextApiResponse} res - Next API response object
  * @returns {Error} an Error instance when verification is unsuccessful
  */
-export function authenticateUser(req: NextApiRequest, res: NextApiResponse) : undefined | Error {
+export function authenticateUser(req: NextApiRequest, res: NextApiResponse) : void {
     const token = req.headers.authorization;
     try{
         const user = jwt.verify(token, process.env.AUTH_JWT_SECRET);
+        if(!user) throw new Error("Invalid token");
         req['user'] = user; //using bracket syntax, otherwise typescript complains
     }catch(err){
-        return new Error("Invalid token");
+        throw new Error("Invalid token");
     }
 }
