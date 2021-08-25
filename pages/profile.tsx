@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import cookie from "cookie";
+import {useRouter} from "next/router";
 
 //atoms
 import {useAtom} from "jotai";
@@ -42,21 +43,25 @@ interface UserData {
 import UsersModel from "@models/Users";
 
 export async function getServerSideProps(context){
-    const refreshToken = cookie.parse(context.req.headers.cookie).rt;
-    const user = jwt.decode(refreshToken);
-    const userData = await UsersModel.getMyProfile(user.id);
-    
-    //this is required, otherwise passing this through server side props will throw a JSON serialization error
-    userData.joinedOn = userData.joinedOn.toISOString();
-    
-    return {
-        props: {
-            userData
-        }
-    };
+    if(context.req.headers.cookie){
+        const refreshToken = cookie.parse(context.req.headers.cookie).rt;
+        const user = jwt.decode(refreshToken);
+        const userData = await UsersModel.getMyProfile(user.id);
+        
+        //this is required, otherwise passing this through server side props will throw a JSON serialization error
+        userData.joinedOn = userData.joinedOn.toISOString();
+        
+        return {
+            props: {
+                userData
+            }
+        };
+    }
+    return {props: {}};
 }
 
 export default function Profile(props){
+    const router = useRouter();
     const [JWTToken, setJWTToken] = useAtom(JWTAuthTokenAtom);
     const [user, setUser] = useState<UserData>(props.userData);
     const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
@@ -98,6 +103,16 @@ export default function Profile(props){
         }
     }
 
+    async function logout() {
+        await axios.get("/api/logout", {
+            headers: {
+            "Authorization": JWTToken
+            }
+        });
+        setJWTToken("");
+        router.replace("/");
+    }
+
     return (
         <div>
             <Navbar/>
@@ -115,7 +130,7 @@ export default function Profile(props){
                 />
             }
             <main className={styles["profile-page"]}>
-                <button className={styles["logout-button"]}>Logout</button>
+                <button onClick={logout} className={styles["logout-button"]}>Logout</button>
                 {user &&
                     <React.Fragment>
                         <section className={styles["user-info"]}>
