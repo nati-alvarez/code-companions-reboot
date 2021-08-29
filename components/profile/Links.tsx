@@ -66,7 +66,7 @@ export default function Links({user, setUser, JWTToken}) {
 
     function validateLinks() : boolean {
         let linksAreValid = true;
-        const validLinkFormat = /^(http|https):\/\/\w*\.\w*.\w*$/;
+        const validLinkFormat = /^(http|https):\/\/\w*\.\w*.\w*/;
         linkUpdates.map(link => {
             const linkIsValid = validLinkFormat.test(link.url);
             const linkHasLabel = link.label.trim() !== "";
