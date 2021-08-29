@@ -67,22 +67,19 @@ export default function Links({user, setUser, JWTToken}) {
     function validateLinks() : boolean {
         let linksAreValid = true;
         const validLinkFormat = /^(http|https):\/\/\w*\.\w*.\w*/;
-        linkUpdates.map(link => {
+        linkUpdates.forEach(link => {
             const linkIsValid = validLinkFormat.test(link.url);
             const linkHasLabel = link.label.trim() !== "";
             if(!linkIsValid){
-                console.log(validLinkFormat.test(link.url) === false)
-                console.log(link)
                 setGlobalErrorMessage("Not all links are valid, ensure they follow this format http(s)://example.com or http(s)://subdomain.example.com");
                 linksAreValid = false;
-                return false;
+                return;
             }
             if(!linkHasLabel) {
                 setGlobalErrorMessage("All links must have a label");
                 linksAreValid = false;
-                return false;
+                return;
             }
-            return true;
         });
         return linksAreValid;
     }
@@ -137,9 +134,9 @@ export default function Links({user, setUser, JWTToken}) {
             <h4>Social Links</h4>
             {!showEditLinks &&
                 <div>
-                    {user.links[0] && user.links.map(link => {
+                    {user.links[0] && user.links.map((link, id) => {
                         return (
-                            <div className={styles["user-link"]}>
+                            <div key={id} className={styles["user-link"]}>
                                 <span>{link.label}</span><a target="_blank" href={link.url}>{link.url}</a>
                             </div>
                         )
@@ -150,16 +147,16 @@ export default function Links({user, setUser, JWTToken}) {
             {showEditLinks &&
                 <div>
                     <button onClick={addNewLink} className={styles['add-new-link-button']}>Add New Link</button>
-                    {linkUpdates[0] && linkUpdates.map(link => {
+                    {linkUpdates[0] && linkUpdates.map((link, id) => {
                         return (
-                            <div className={styles["edit-user-link"]}>
+                            <div key={id} className={styles["edit-user-link"]}>
                                 <fieldset>
                                     <label htmlFor="link-label">Label</label>
-                                    <input onChange={updateLinkLabel} data-id={link.id} id="link-label" type="text" defaultValue={link.label} value={link.label}/>
+                                    <input onChange={updateLinkLabel} data-id={link.id} id="link-label" type="text" value={link.label}/>
                                 </fieldset>
                                 <fieldset>
                                     <label htmlFor="link-url">URL</label>
-                                    <input onChange={updateLinkUrl} data-id={link.id} id="link-url" type="text" defaultValue={link.url} value={link.url}/>
+                                    <input onChange={updateLinkUrl} data-id={link.id} id="link-url" type="text" value={link.url}/>
                                 </fieldset>
                             </div>
                         )

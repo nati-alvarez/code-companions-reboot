@@ -124,33 +124,35 @@ export default function Skills({user, setUser, JWTToken}){
                 </>
             }
 
-            {!showSkillSelect && user.skills[0] && user.skills.map(skill=>{
+            {!showSkillSelect && user.skills[0] && user.skills.map((skill, id)=>{
                 return (
-                    <div className={styles["skill-tag"]}>
+                    <div key={id} className={styles["skill-tag"]}>
                         {skill}
                     </div>
                 )
             })}
-            {showSkillSelect && skillUpdates.map(skill=>{
+            {showSkillSelect && skillUpdates.map((skill, id)=>{
                 return (
-                    <div className={`${styles["skill-tag"]} ${styles["skill-tag-removable"]}`} onClick={()=> updateUserSkills({action: "remove", skillName: skill})}>
+                    <div key={id} className={`${styles["skill-tag"]} ${styles["skill-tag-removable"]}`} onClick={()=> updateUserSkills({action: "remove", skillName: skill})}>
                         {skill}
                     </div>
                 )
             })}
 
             {!user.skills[0] && !skillUpdates[0] && <p>You haven't added any skills.</p>}
-            {showSkillSelect && <div className={styles["skill-select"]}>
-                <input onKeyUp={e=> updateUserSkills({action: "add", e})} onChange={updateSkillQuery} value={skillQuery} type="text"/>
-                <div className={styles["suggestions"]}>
-                    {skillSuggestions.map((suggestion: ISuggestion) =>{
-                        return (
-                            <div key={suggestion.id} onClick={()=> updateUserSkills({action: "add", skillName: suggestion.keyName})} className={styles["suggestion"]}>{suggestion.keyName}</div>
-                        );
-                    })}
-                    {skillSuggestionsLoading && <LoadingAnimation/>}
+            {showSkillSelect && 
+                <div className={styles["skill-select"]}>
+                    <input onKeyUp={e=> updateUserSkills({action: "add", e})} onChange={updateSkillQuery} value={skillQuery} type="text"/>
+                    <div className={styles["suggestions"]}>
+                        {skillSuggestions.map((suggestion: ISuggestion) =>{
+                            return (
+                                <div key={suggestion.id} onClick={()=> updateUserSkills({action: "add", skillName: suggestion.keyName})} className={styles["suggestion"]}>{suggestion.keyName}</div>
+                            );
+                        })}
+                        {skillSuggestionsLoading && <LoadingAnimation/>}
+                    </div>
                 </div>
-            </div>}
-        </section>
+            }
+         </section>
     )
 }
