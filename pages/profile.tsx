@@ -143,10 +143,12 @@ export default function Profile(props){
                                 <span className={styles["name"]}>{user.name}</span>
                             </div>
                             <p className={styles["title"]}>{user.title}</p>
-                            <div className={styles["about"]}>
-                                <h4>About Me</h4>
-                                <p>{user.about}</p>
-                            </div>
+                            {user.about && 
+                                <div className={styles["about"]}>
+                                    <h4>About Me</h4>
+                                    <p>{user.about}</p>
+                                </div>
+                            }
                         </section>
                         <Skills user={user} setUser={setUser} JWTToken={JWTToken}/>
                         <Links user={user} setUser={setUser} JWTToken={JWTToken}/>
