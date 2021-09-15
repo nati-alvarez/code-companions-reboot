@@ -68,7 +68,7 @@ export default abstract class UsersModel {
         .where(queryBy)
         .first();
         if(!user) throw new Error("Incorrect username or password");
-        if(password && !bcrypt.compareSync(password, user.password)) throw new Error("Incorrect username or password");
+        if(email && password && !bcrypt.compareSync(password, user.password)) throw new Error("Incorrect username or password");
         return {
             id: user.id,
             username: user.username,
