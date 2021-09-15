@@ -61,31 +61,30 @@ export async function getServerSideProps(context: NextPageContext) {
         //gets user github info with accessToken
         const user = octokat({token: props.githubAccessToken});
         const userGithubData = JSON.parse(await user.me.read());
-	console.log(userGithubData);
-	try {
-            //generates auth and refresh jwt if login valid
-            const userPayload = await UsersModel.getUserLogin(null, null, userGithubData.id);
-            const refreshToken = generateRefreshToken(userPayload);
-            const authToken = generateAuthToken(userPayload);
-            const today = new Date();
-            const cookieExpiryDate = today.setDate(today.getDate() + 2);
-            context.res.setHeader(
-                "Set-Cookie",
-                serialize("rt", refreshToken, {
-                    httpOnly: true,
-                    expires: new Date(cookieExpiryDate),
-                    maxAge:  60 * 60 * 24 * 2,
-                    path: "/",
-                    secure: process.env.NODE_ENV === "production"
-                })
-            );
-            //jwt will be passed to component in props, from there update atom state and 
-            //JWTWrapper component will handle redirect
-            props.jwtAuthToken = authToken;
-        }catch(err){
-            console.log(err.message);
+        try {
+                //generates auth and refresh jwt if login valid
+                const userPayload = await UsersModel.getUserLogin(null, null, userGithubData.id);
+                const refreshToken = generateRefreshToken(userPayload);
+                const authToken = generateAuthToken(userPayload);
+                const today = new Date();
+                const cookieExpiryDate = today.setDate(today.getDate() + 2);
+                context.res.setHeader(
+                    "Set-Cookie",
+                    serialize("rt", refreshToken, {
+                        httpOnly: true,
+                        expires: new Date(cookieExpiryDate),
+                        maxAge:  60 * 60 * 24 * 2,
+                        path: "/",
+                        secure: process.env.NODE_ENV === "production"
+                    })
+                );
+                //jwt will be passed to component in props, from there update atom state and 
+                //JWTWrapper component will handle redirect
+                props.jwtAuthToken = authToken;
+            }catch(err){
+                console.log(err.message);
+            }
         }
-    }
     return {
         props
     }
