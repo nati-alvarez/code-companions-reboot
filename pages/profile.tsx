@@ -134,7 +134,7 @@ export default function Profile(props){
                 {user &&
                     <React.Fragment>
                         <section className={styles["user-info"]}>
-                            <div onClick={()=>setShowInfoModal(true)} className={styles["edit-button"]}>
+                            <div data-testid="edit-profile-button" onClick={()=>setShowInfoModal(true)} className={styles["edit-button"]}>
                                 <FaPen/>
                             </div>
                             <img className={styles["pfp"]} src={user.profilePicture}/>
