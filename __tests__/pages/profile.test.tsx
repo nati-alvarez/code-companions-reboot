@@ -108,5 +108,4 @@ it("Should update profile info when changed in the change profile details modal"
     fireEvent.change(nameInput, {target: {value: "MY name is a name"}});
     fireEvent.change(titleInput, {target: {value: "Professional jackass"}});
     fireEvent.change(aboutTextarea, {target: {value: "Hello my name is name this is stuff about me."}});
-    
 });

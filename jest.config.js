@@ -1,9 +1,9 @@
 module.exports = {
     testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
     setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
+    testEnvironment: "jsdom",
     transform: {
         "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-        "\\.(css|less|scss|sass)$": "identity-obj-proxy"
     },
     //using a libarary called  jest-css-modules to fix weird error in jest when importing css modules with @/styles path config
     moduleNameMapper: {
