@@ -137,7 +137,7 @@ export default function Profile(props){
                             <div data-testid="edit-profile-button" onClick={()=>setShowInfoModal(true)} className={styles["edit-button"]}>
                                 <FaPen/>
                             </div>
-                            <img className={styles["pfp"]} src={user.profilePicture}/>
+                            <img alt="Your profile picture" className={styles["pfp"]} src={user.profilePicture}/>
                             <div className={styles["handles"]}>
                                 <span className={styles["username"]}>@{user.username}</span>
                                 <span className={styles["name"]}>{user.name}</span>
