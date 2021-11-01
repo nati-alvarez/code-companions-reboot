@@ -1,5 +1,5 @@
 import {render, cleanup, fireEvent, getByLabelText} from "@testing-library/react";
-import {Provider} from "jotai"
+import {Provider} from "jotai";
 
 import GlobalError from "@components/GlobalError";
 import GlobalSuccess from "@components/GlobalSuccess";
@@ -11,6 +11,10 @@ afterEach(cleanup);
 afterAll(async ()=>{
     await db("Users").truncate();
 });
+
+import axios from "axios";
+jest.mock("axios");
+axios.put = jest.fn();
 
 const mockUser = {
     "id": 1,
@@ -90,22 +94,28 @@ it("Should render modal to change profile details on button click", () => {
     expect(getByText("Edit Your Account Info")).toBeDefined();
 });
 
-it("Should update profile info when changed in the change profile details modal", () => {
-    const {getByText, getByTestId, getByLabelText} = render(component);
-    const editProfileButton = getByTestId("edit-profile-button");
-    expect(getByText("this is my bio")).toBeDefined();
-    fireEvent.click(editProfileButton);
+it("Should update profile info when changed in the change profile details modal", async () => {
+    const {getByText, getByTestId, getByLabelText, findByText, findByTestId, findByAltText} = render(component);
     
+    const editProfileButton = getByTestId("edit-profile-button");
+    fireEvent.click(editProfileButton);
     const profilePictureInput = getByLabelText("Profile Picture");
     const usernameInput = getByLabelText("Username");
     const nameInput = getByLabelText("Name");
     const titleInput = getByLabelText("Title");
     const aboutTextarea = getByLabelText("About");
-    const submitButton = getByText("Submit");
-
+    const submitButton = getByTestId("modal-button");
+    
     fireEvent.change(profilePictureInput, {target: {value: "http://3.bp.blogspot.com/-l62If-yRVx0/T-2M1-uIu4I/AAAAAAAAAb8/5nCwdftlSb4/s1600/383179_312663185412749_1872306312893.jpg"}})
-    fireEvent.change(usernameInput, {target: {value: "Users name"}});
-    fireEvent.change(nameInput, {target: {value: "MY name is a name"}});
-    fireEvent.change(titleInput, {target: {value: "Professional jackass"}});
+    fireEvent.change(usernameInput, {target: {value: "BrandNewUser"}});
+    fireEvent.change(nameInput, {target: {value: "BrandNewName"}});
+    fireEvent.change(titleInput, {target: {value: "Professional coder"}});
     fireEvent.change(aboutTextarea, {target: {value: "Hello my name is name this is stuff about me."}});
+    fireEvent.click(submitButton);
+   
+    expect(await findByText("BrandNewName")).toBeDefined();
+    expect(await findByText("@BrandNewUser")).toBeDefined();
+    expect(await findByText("Professional coder")).toBeDefined();
+    expect(await findByText("Hello my name is name this is stuff about me."));
+    expect(await (findByAltText("Your profile picture"))).toHaveAttribute("src", "http://3.bp.blogspot.com/-l62If-yRVx0/T-2M1-uIu4I/AAAAAAAAAb8/5nCwdftlSb4/s1600/383179_312663185412749_1872306312893.jpg"); 
 });
