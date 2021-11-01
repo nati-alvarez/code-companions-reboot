@@ -97,7 +97,7 @@ export default function CreateProjectModal({heading, modalState, modalError, set
                 {inputs}
                 {!isLoading && 
                     <div className={styles['actions']}>
-                        <button className={styles['modal-button']}>Submit</button>
+                        <button data-testid="modal-button" className={styles['modal-button']}>Submit</button>
                         <button onClick={closeModal}>Close</button>
                     </div> 
                 }
@@ -105,7 +105,7 @@ export default function CreateProjectModal({heading, modalState, modalError, set
                     <LoadingAnimation/>
                 }
                 {modalError.message && 
-                    <p className={styles["modal-error"]}>{modalError.message}</p>
+                    <p data-testid="modal-error" className={styles["modal-error"]}>{modalError.message}</p>
                 }
             </form>
        </div>
