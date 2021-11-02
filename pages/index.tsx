@@ -58,7 +58,7 @@ export default function Home() {
             <div>
               <h2>Our Blog</h2>
               <p>Check out the latest tech news,
-              tutorials, and site wide announcements  on our blog!
+              tutorials, and site wide announcements on our blog!
               </p>
               <button className={styles["secondary-button-wide"]}>
                 Check it Out!
