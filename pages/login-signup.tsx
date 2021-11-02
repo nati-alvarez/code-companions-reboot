@@ -110,7 +110,9 @@ export default function LoginSignup({githubAccessToken, formStartingWith, jwtAut
             const res = await axios.post("/api/login", data);
             setJWTAuthToken(res.data.authToken)
         }catch(err){
-           setGlobalError(err.response.data.message);
+            if(err.response){
+                setGlobalError(err.response.data.message);
+            }
         }finally {
             setLoginIsLoading(false);
         }

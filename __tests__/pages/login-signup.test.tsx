@@ -1,4 +1,4 @@
-import {render, cleanup, fireEvent, act, waitFor, wait} from "@testing-library/react";
+import {render, fireEvent, waitFor} from "@testing-library/react";
 import {Provider} from "jotai"
 
 import GlobalError from "@components/GlobalError";
@@ -9,6 +9,7 @@ import LoginSignup from "../../pages/login-signup";
 import axios from "axios";
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+import Router from "next/router";
 
 import db from "@models/db";
 import UsersModel from "@models/Users";
@@ -20,7 +21,6 @@ beforeAll(async ()=>{
         password: "testpassword"
     });
 });
-afterEach(cleanup)
 afterAll(async ()=>{
     await db("Users").truncate();
 });
@@ -70,80 +70,84 @@ it("Should change form on form tab click", async ()=>{
     expect(signupTab.className).toBe("active");
 });
 
-it("Should show error when field incorrectly/not completed", async()=>{
-    const {getByLabelText, getByTestId, getByText} = render(component);
+it("Should show error when field incorrectly/not completed on login form", async()=>{
+    const {getByLabelText, getByTestId, queryByText, findByText} = render(component);
+    const loginTab = getByTestId("login-tab");
+    fireEvent.click(loginTab);
+ 
     const email = getByLabelText("email");
     const password = getByLabelText("password");
     const button = getByTestId("form-button");
     
-    await fireEvent.change(email, {target: {value: ""}});
-    await fireEvent.change(password, {target: {value: "somepassword"}});
-    await fireEvent.click(button);
-    expect(getByText("This field is required")).toBeDefined();
-    
-    await fireEvent.change(email, {target: {value: "a@b.c"}});
-    await fireEvent.change(password, {target: {value: ""}});
-    await fireEvent.click(button);
-    
-    expect(getByText("This field is required")).toBeDefined();
+    fireEvent.change(email, {target: {value: ""}});
+    fireEvent.change(password, {target: {value: "somepassword"}});
+    fireEvent.click(button);
+    expect(await findByText("This field is required")).toBeDefined(); 
+   
+    fireEvent.change(email, {target: {value: "a@b.c"}});
+    fireEvent.change(password, {target: {value: ""}});
+    fireEvent.click(button);
+    expect(await findByText("This field is required")).toBeDefined();
 
-    await fireEvent.change(email, {target: {value: "a@b.c"}});
-    await fireEvent.change(password, {target: {value: "asdlfkjasd"}});
-    await fireEvent.click(button);
-    waitFor(()=>{
-        expect(getByText("This field is required")).not.toBeDefined();
-    });
+    fireEvent.change(email, {target: {value: "a@b.c"}});
+    fireEvent.change(password, {target: {value: "asdlfkjasd"}});
+    fireEvent.click(button);
+    await waitFor(() => {expect(queryByText("This field is required")).toBeNull()});
 });
 
-it("Should perform form validation on input fields", async ()=>{
-    const {getByLabelText, getByTestId, getByText} = render(component);
+it("Should perform form validation on login input fields", async ()=>{
+    const {getByLabelText, getByTestId, findByText} = render(component);
+    const loginTab = getByTestId("login-tab");
+    fireEvent.click(loginTab);
+   
     const email = getByLabelText("email");
     const password = getByLabelText("password");
     const button = getByTestId("form-button");
 
-    await fireEvent.change(email, {target: {value: "why"}});
-    await fireEvent.change(password, {target: {value: "somepassword"}});
-    await fireEvent.click(button);
-    waitFor(()=>{
-        expect(getByText("Please enter in a valid email address")).toBeDefined();
-    });
+    fireEvent.change(email, {target: {value: "why"}});
+    fireEvent.change(password, {target: {value: "somepassword"}});
+    fireEvent.click(button);
+    expect(await findByText("Please enter in a valid email address")).toBeDefined();
 
-    await fireEvent.change(email, {target: {value: "why@fuckyou.cunt"}});
-    await fireEvent.change(password, {target: {value: "pass"}});
-    await fireEvent.click(button);
-    waitFor(()=>{
-        expect(getByText("Password must be 6 charaters or longer and contain no spaces")).toBeDefined();
-    });
+    fireEvent.change(email, {target: {value: "why@where.how"}});
+    fireEvent.change(password, {target: {value: "pass"}});
+    fireEvent.click(button);
+    expect(await findByText("Password must be 6 charaters or longer and contain no spaces")).toBeDefined();
 });
 
-it("Should show error on login with incorrect credentials", ()=>{
+it("Should show error on login with incorrect credentials", async ()=>{
     mockedAxios.post.mockRejectedValue({response: { data: {message: "Incorrect username or password"} } })
     const {getByLabelText, getByTestId, findByText} = render(component);
     const loginTab = getByTestId("login-tab");
+    fireEvent.click(loginTab);
+   
     const email = getByLabelText("email");
     const password = getByLabelText("password");
     const button = getByTestId("form-button");
   
-    fireEvent.click(loginTab);
     fireEvent.change(email, {target: {value: "aasdafd@gmail.com"}});
     fireEvent.change(password, {target: {value: "somepassword"}});
     fireEvent.click(button);
-    
-    expect(findByText("Incorrect username or password")).toBeDefined();
+   
+    expect(await findByText("Incorrect username or password")).toBeDefined();
 });
 
 it("Should redirect on successful login", async ()=>{
+    const spies = {};
+    spies.routerChangeStart = jest.fn();
+    Router.events.on('routeChangeStart', spies.routerChangeStart);
     mockedAxios.post.mockResolvedValue({response: { data: {message: "Login successful"} } });
-    const {getByLabelText, getByTestId, getByText} = render(component);
+    const {getByLabelText, getByTestId, getByText, queryByText} = render(component);
     const loginTab = getByTestId("login-tab");
+    fireEvent.click(loginTab);
+    
     const email = getByLabelText("email");
     const password = getByLabelText("password");
     const button = getByTestId("form-button");
   
-    await fireEvent.click(loginTab);
-    await fireEvent.change(email, {target: {value: "test@email.com"}});
-    await fireEvent.change(password, {target: {value: "testpassword"}});
-    await fireEvent.click(button);
-    waitFor(()=> expect(mockedAxios.post).toHaveBeenCalledTimes(1));
+    fireEvent.change(email, {target: {value: "test@email.com"}});
+    fireEvent.change(password, {target: {value: "testpassword"}});
+    fireEvent.click(button);
+    await waitFor(() => expect(queryByText("Incorrect username or password")).toBeNull());
 });
 
