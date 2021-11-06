@@ -9,7 +9,6 @@ import LoginSignup from "../../pages/login-signup";
 import axios from "axios";
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-import Router from "next/router";
 
 import db from "@models/db";
 import UsersModel from "@models/Users";
@@ -133,10 +132,8 @@ it("Should show error on login with incorrect credentials", async ()=>{
 });
 
 it("Should redirect on successful login", async ()=>{
-    const spies = {};
-    spies.routerChangeStart = jest.fn();
-    Router.events.on('routeChangeStart', spies.routerChangeStart);
     mockedAxios.post.mockResolvedValue({response: { data: {message: "Login successful"} } });
+    
     const {getByLabelText, getByTestId, getByText, queryByText} = render(component);
     const loginTab = getByTestId("login-tab");
     fireEvent.click(loginTab);
