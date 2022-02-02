@@ -152,16 +152,16 @@ export default abstract class UsersModel {
             // So, here we delete all a users skills first because we'll re-upload duplicates otherwise, which causes a unique constraint error
             // NOTE: We should potentially find a better way to do this, so all the skills don't have to be bulk deleted and uploaded each time
             await db("UserSkills").del().where({userId})
-            await db("UserSkills").insert(changes.skills);
+            //empty array just clears all skills
+            if(changes.skills.length > 0) await db("UserSkills").insert(changes.skills);
             // removing the property here so it doesn't affect any other updates
             delete changes.skills;
         }
         
-        console.log(changes)
         if(changes.links){
             // same as skills
             await db("UserLinks").del().where({userId})
-            await db("UserLinks").insert(changes.links);
+            if(changes.links.length > 0) await db("UserLinks").insert(changes.links);
 
             delete changes.links;
         }
