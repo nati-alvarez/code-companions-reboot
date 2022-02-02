@@ -1,15 +1,16 @@
-import {useState, useRef} from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 
 // atoms
 import { useAtom } from "jotai";
-import {globalSuccessAtom} from "@atoms/globalMessages"
+import { globalSuccessAtom } from "@atoms/globalMessages";
+import { globalErrorAtom } from "@atoms/globalMessages";
 
 // styles
 import styles from "@styles/Profile.module.scss";
 
 // icons
-import {FaPen, FaSave, FaTrashAlt} from "react-icons/fa";
+import { FaPen, FaSave, FaTrashAlt } from "react-icons/fa";
 
 // components
 import LoadingAnimation from "@components/LoadingAnimation";
@@ -20,7 +21,7 @@ interface ISuggestion {
     id: string
 }
 
-export default function Skills({user, setUser, JWTToken}){
+export default function Skills({user, setUser, JWTToken, skillAutocompleteSuggestions}){
     const [skillQuery, setSkillQuery] = useState<string>("");
     const [skillSuggestions, setSkillSuggestions] = useState<Array<Object>>([]);
     const [skillSuggestionsLoading, setSkillSuggestionsLoading] = useState<boolean>(false);
@@ -29,6 +30,8 @@ export default function Skills({user, setUser, JWTToken}){
     const skillQueryTimeout = useRef<any>();
 
     const [globalSuccessMessage, setGlobalSuccessMessage] = useAtom(globalSuccessAtom);
+    const [globalErrorMessage, setGlobalErrorMessage] = useAtom(globalErrorAtom);
+
     
 
     function updateSkillQuery(e) {
@@ -46,15 +49,16 @@ export default function Skills({user, setUser, JWTToken}){
         if(!query) return;
         setSkillSuggestionsLoading(true);
 
-        axios.post('/api/skills-api', {query}, {
-            headers: {
-                "Authorization": JWTToken
-            }
-        }).then(res=>{
-            setSkillSuggestions(res.data);
-        }).catch(err=>{
-            console.log(err);
-        }).finally(() => setSkillSuggestionsLoading(false));
+        const suggestions = [];
+        skillAutocompleteSuggestions.every(skill=>{
+            const regex = new RegExp(`^${query.toLowerCase()}`);
+            if(regex.test(skill.keyName.toLowerCase())) suggestions.push(skill);
+            if(suggestions.length === 5) return false;
+            return true;
+        });
+        console.log(suggestions)
+        setSkillSuggestions(suggestions);
+        setSkillSuggestionsLoading(false);
     }
     
     async function updateUserSkills(skillData){
@@ -102,6 +106,7 @@ export default function Skills({user, setUser, JWTToken}){
             setGlobalSuccessMessage(res.data.message);
         }catch(err){
             console.log(err.response.data.message);
+            setGlobalErrorMessage(err.response.data.message);
         }
     }
 
