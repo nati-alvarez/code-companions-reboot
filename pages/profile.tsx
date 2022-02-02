@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import cookie from "cookie";
@@ -50,10 +52,16 @@ export async function getServerSideProps(context){
         
         //this is required, otherwise passing this through server side props will throw a JSON serialization error
         userData.joinedOn = userData.joinedOn.toISOString();
+
+        //trendy skills api is broken, grabbing list form local json file instead for now
+        const dir = path.resolve('./', "tech-autocomplete-keywords.json");
+        let skillAutocompleteSuggestions = fs.readFileSync(dir);
+        skillAutocompleteSuggestions = JSON.parse(skillAutocompleteSuggestions.toString('utf-8'));
         
         return {
             props: {
-                userData
+                userData,
+                skillAutocompleteSuggestions
             }
         };
     }
@@ -150,7 +158,7 @@ export default function Profile(props){
                                 </div>
                             }
                         </section>
-                        <Skills user={user} setUser={setUser} JWTToken={JWTToken}/>
+                        <Skills user={user} setUser={setUser} JWTToken={JWTToken} skillAutocompleteSuggestions={props.skillAutocompleteSuggestions}/>
                         <Links user={user} setUser={setUser} JWTToken={JWTToken}/>
                     </React.Fragment>
                 }
