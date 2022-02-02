@@ -54,8 +54,12 @@ export default function Links({user, setUser, JWTToken}) {
 
     function addNewLink () {
         setLinkUpdates([...linkUpdates, {id: `${newLinkId.current}`, label: "", url: ""}]);
-        const lastLinkIdNum = newLinkId.current.substr(newLinkId.current.length - 1, 1);
+        const lastLinkIdNum = parseInt(newLinkId.current.substr(2));
         newLinkId.current = `n-${lastLinkIdNum + 1}`;
+    }
+
+    function removeLink (linkToRemove : IUserLink) {
+        setLinkUpdates(linkUpdates.filter(link=> link.id != linkToRemove.id));
     }
 
     function discardChanges (){
@@ -158,6 +162,7 @@ export default function Links({user, setUser, JWTToken}) {
                                     <label htmlFor="link-url">URL</label>
                                     <input onChange={updateLinkUrl} data-id={link.id} id="link-url" type="text" value={link.url}/>
                                 </fieldset>
+                                <button onClick={() => removeLink(link)} className={styles["discard-link-btn"]}><FaTrashAlt/></button>
                             </div>
                         )
                     })}
