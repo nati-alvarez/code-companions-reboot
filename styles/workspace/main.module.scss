@@ -1,0 +1,9 @@
+@import "../variables.scss";
+
+.workspace-container {
+    margin: 1rem;
+}
+
+.return-home-btn {
+    @include secondary-button;
+}

@@ -50,6 +50,10 @@ export async function getServerSideProps(context: NextPageContext) {
                 },
                 {headers: {"Accept": "application/json"}}
             )
+            if(res.data.error) {
+                console.log(res.data.error_description);
+                throw new Error("Server error, please try again");
+            }
             const githubAccessToken = res.data.access_token ? res.data.access_token: null;
             props.githubAccessToken = githubAccessToken;
         }catch(err){
